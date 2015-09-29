@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>JavaScript, Intro</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/yandex.css" id="theme">
+    <link rel="stylesheet" href="css/user.css">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body class="yandex">
+
+<div class="reveal">
+    <div class="slides">
+        <section class="large">
+            <h1>JavaScript</h1>
+            <h4>История развития, способы запуска, обзор IDE</h4>
+
+            <p style="text-align: center;">
+                <small><span style="color: red">Ж</span>игалов Сергей.</small>
+                <br>
+                <small><span style="color: red">Р</span>азработчик интерфейсов.</small>
+            </p>
+        </section>
+
+        <section data-background-video="images/taxi_screencast.webm">
+        </section>
+
+        <section>
+            <h2>Java</h2>
+
+            <ul>
+                <li>написать код</li>
+                <li>скомпилировать</li>
+                <li>упаковать в апплет</li>
+                <li>подключить</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Брэндон Айк</h2>
+
+            <p>разработал JavaScript для Netscape</p>
+            <img src="images/brendan.jpg" alt="Брэндон Айк"/>
+        </section>
+
+        <section>
+            <h2>JavaScript</h2>
+
+            <ul>
+                <li>написать код</li>
+                <li class="strike">скомпилировать</li>
+                <li class="strike">упаковать в апплет</li>
+                <li class="strike">подключить</li>
+            </ul>
+        </section>
+
+        <section>
+            <ul>
+                <li>Синтаксис &rarr; C, C++, Java</li>
+                <li>Наследование через прототипы  &rarr; Self</li>
+                <li>Динамическая типизация &rarr; Perl</li>
+                <li>Ссылки на функции &rarr; Lisp</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>LiveScript</h1>
+
+            <div class="fragment">
+                <img src="images/java.png" alt="java" height="400"/>
+            </div>
+        </section>
+
+        <section>
+            <h1>JavaScript</h1>
+        </section>
+
+        <section>
+            <h2>Брэндон Айк</h2>
+            <blockquote>... JS был обязан «выглядеть как Java», только поменьше, быть эдаким младшим братом-простаком
+                для Java...</blockquote>
+        </section>
+
+        <section>
+            <h2>Брэндон Айк</h2>
+            <blockquote>... Кроме того, он должен был быть написан за 10 дней, а иначе мы бы имели
+                что-то похуже JS... В то время мы должны были двигаться очень быстро,
+                т.к. знали, что Microsoft идет за нами...
+            </blockquote>
+        </section>
+
+        <section>
+            <h2>Внедрение</h2>
+            <table class="tableCenter tableMiddle noBorder">
+                <tr>
+                    <td><img src="images/netscape.png" width="64" alt="netscape"/></td>
+                    <td>v2.0</td>
+                    <td>JavaScript</td>
+                </tr>
+                <tr>
+                    <td><img src="images/internetExplorer.png" width="64" alt="netscape"/></td>
+                    <td>v3</td>
+                    <td>JScript</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>ECMAScript</h2>
+        </section>
+
+        <section>
+            <h2>Диалекты</h2>
+            <table>
+                <tr>
+                    <td>JavaScript</td>
+                    <td>Netscape</td>
+                </tr>
+                <tr>
+                    <td>ActionScript</td>
+                    <td>Flash</td>
+                </tr>
+                <tr>
+                    <td>JScript</td>
+                    <td>Internet Explorer</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>JSON</h2>
+            <p>(JavaScript Object Notation)</p>
+            <p>Дуглас Крокфорд, 2001</p>
+            <pre><code data-trim>
+{
+    "first": "John",
+    "last": "Doe",
+    "married": true,
+    "born": 1890,
+    "friends": [ "Tarzan", "Cheeta" ]
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>JSON</h2>
+            <p>(JavaScript Object Notation)</p>
+            <p>Дуглас Крокфорд, 2001</p>
+            <pre><code data-trim>
+<?xml version="1.0" encoding="UTF-8" ?>
+<person>
+    <first>John</first>
+    <last>Doe</last>
+    <married>true</married>
+    <born>1890</born>
+    <friends>Tarzan</friends>
+    <friends>Cheeta</friends>
+</person>
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>AJAX</h2>
+            <p>(Asynchronous JavaScript and XML)</p>
+            <p>Джеймс Гаррет, 2005</p>
+            <img src="images/google_maps.jpeg" alt="Google maps 2005"/>
+        </section>
+
+        <section>
+            <img src="images/node.svg" alt="node"/>
+        </section>
+
+        <section>
+            <img src="images/nodejsTimeline.png" alt="Node.js timeline"/>
+        </section>
+
+        <section>
+            <h2>ECMA</h2>
+
+            <table>
+                <tr>
+                    <td>ECMAScript</td>
+                    <td>1997</td>
+                </tr>
+                <tr>
+                    <td>ECMAScript 2</td>
+                    <td>1998</td>
+                </tr>
+                <tr>
+                    <td>ECMAScript 3</td>
+                    <td>1999</td>
+                </tr>
+                <tr>
+                    <td>ECMAScript 5</td>
+                    <td>2009</td>
+                </tr>
+                <tr>
+                    <td>ECMAScript 6 (ES2015)</td>
+                    <td>2015</td>
+                </tr>
+                <tr>
+                    <td>ECMAScript 7</td>
+                    <td>?</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Основы языка</h2>
+            <h4>Типы данных<sup>*</sup></h4>
+            <br/><br/>
+            <div class="size-XS">* - подробнее об этом в следующей <span style="text-decoration: line-through">серии</span> лекции</div>
+        </section>
+
+        <section>
+            <h2>Числовой</h2>
+            <pre class="size-L javascript"><code data-trim>
+123     // 123
+12.3    // 12.3
+0x11    // 17
+0b11    // 3
+0o11    // 9
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Строковый</h2>
+            <pre class="size-M javascript"><code data-trim>
+'строка текста'
+"строка текста"
+'中文 español русский \' '
+            </code></pre>
+            <pre class="size-S javascript fragment"><code data-trim>
+'«JavaScript — это простой, но ' +
+'изящный язык, который является ' +
+'невероятно мощным для решения ' +
+'многих задач» © Джон Резиг'
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Логический</h2>
+            <pre class="size-L javascript"><code data-trim>
+true
+false
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Hеопределенное значение</h2>
+            <pre class="size-S javascript"><code data-trim>
+var a;
+console.log(a);    // undefined
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Основы языка</h2>
+            <h4>Переменные</h4>
+        </section>
+
+        <section>
+            <h2>Переменные</h2>
+            <pre class="size-M javascript"><code data-trim>
+var studentsCount;
+studentsCount = 98;
+            </code></pre>
+            <pre class="size-M javascript fragment"><code data-trim>
+var studentsCount = 98;
+            </code></pre>
+            <pre class="size-M javascript fragment"><code data-trim>
+var studentsCount = 98,
+    language = 'JavaScript';
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Именование переменных</h3>
+            <pre class="size-M javascript">
+<mark>o</mark>neMoment
+A-z _ $
+<div class="fragment"><span style="background: red;">1</span>moment</div>
+            </pre>
+
+            <pre class="size-M javascript fragment">
+s<mark>oSo</mark>
+A-z 0-9 _ $
+<div class="fragment">so<span style="background: red;">-</span>so</div></pre>
+            </pre>
+        </section>
+
+        <section>
+            <h3>Именование переменных</h3>
+            <pre class="size-M javascript"><code data-trim>
+var currentTime;
+var MILLISECONDS_IN_DAY;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Зарезервированные слова</h3>
+            <pre class="size-S css"><code data-trim>
+break    do       try       while
+case     else     new       with
+catch    finally  return
+continue for      switch
+debugger function this
+default  if       throw
+delete   in       instanceof
+typeof   var      void
+            </code></pre>
+            <a href="https://clck.ru/9auhk">https://clck.ru/9auhk</a>
+        </section>
+
+
+        <section>
+            <h3>Зарезервированные слова</h3>
+            <pre class="size-S css"><code data-trim>
+class enum   extends super
+const export import
+            </code></pre>
+            <a href="https://clck.ru/9auhk">https://clck.ru/9auhk</a>
+        </section>
+
+        <section>
+            <h3>Комментарии</h3>
+            <pre class="size-S javascript"><code data-trim>
+// это короткий комментарий
+            </code></pre>
+            <pre class="size-S javascript"><code data-trim>
+/* а это длинный комментарий
+   написаный в несколько строк */
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Основы языка</h2>
+            <h4>Операторы<sup>(*)</sup> <sup>(**)</sup></h4>
+            <br/><br/>
+            <div class="size-XS">(*) - подробнее об этом в следующих лекции</div>
+            <div class="size-XS">(**) - операторы перечислены по убыванию приоритета</div>
+        </section>
+
+        <section>
+            <section>
+                <h3>Унарные</h3>
+                <pre class="size-M javascript">
+++ (инкремент)
+-- (декремент)
+-  (унарный минус)
+!  (логическое НЕ)
+                </pre>
+            </section>
+
+            <section>
+                <h3>Инкремент</h3>
+                <pre class="size-M javascript"><code data-trim>
+var a = 1;
+var b = a++;  // b === 1, a === 2
+                </code></pre>
+                <pre class="size-M javascript fragment"><code data-trim>
+var a = 1;
+var b = ++a;  // b === 2, a === 2
+                </code></pre>
+            </section>
+        </section>
+
+        <section>
+            <h2>Бинарные</h2>
+        </section>
+
+        <section>
+            <h3>Арифметические</h3>
+            <pre class="size-M javascript">
+* (умножение)
+/ (деление)
+% (остаток от деления)
+            </pre>
+            <pre class="size-M javascript fragment">
++ (сложение)
+- (вычитание)
++ (сложение строк)
+            </pre>
+        </section>
+
+        <section>
+            <h3>Сравнения</h3>
+            <pre class="size-S javascript">
+<  (меньше)
+<= (меньше или равно)
+>  (больше)
+>= (больше или равно)
+            </pre>
+            <pre class="size-S javascript fragment">
+==  (проверка на равенство)
+!=  (проверка на неравенство)
+=== (проверка на идентичность)
+!== (проверка на неидентичность)
+            </pre>
+        </section>
+
+        <section>
+            <h3>Логические</h3>
+            <pre class="size-S javascript">&  (побитовое И)</pre>
+            <pre class="size-S javascript fragment">|  (побитовое ИЛИ)</pre>
+            <pre class="size-S javascript fragment">&& (И)</pre>
+            <pre class="size-S javascript fragment">|| (ИЛИ)</pre>
+        </section>
+
+        <section>
+            <h3>Присваиваивание</h3>
+            <pre class="size-M javascript">= (присваивание)</pre>
+            <pre class="size-M javascript fragment">*= /=, +=, -=, &=, ^=, |= <br/>(присваивание с операцией)</pre>
+            <pre class="size-M javascript fragment"><code data-trim>
+var a = 1;
+a += 1;
+a = a + 1;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Условные операторы</h3>
+            <pre class="size-S javascript"><code data-trim>
+if (language === 'JavaScript') {
+    likes = likes + 1;
+} else {
+    likes = likes - 1;
+}
+            </code></pre>
+            <pre class="size-S javascript fragment"><code data-trim>
+likes = language === 'JavaScript' ?
+    likes + 1 :
+    likes - 1;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Условные операторы</h3>
+            <pre class="size-XS javascript"><code data-trim>
+switch (language) {
+    case 'JavaScript':
+        likes++;
+        break;
+    case 'C++':
+    case 'Java':
+        break;
+    default:
+        likes--;
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Statement</h2>
+            <pre class="size-L"><code data-trim contenteditable>
+a = b * 2;
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Expression</h2>
+            <pre class="size-XS"><code data-trim contenteditable>
+a = b * 2;
+
+// 2 - это выражение литерала
+// b - это выражение переменной
+// b * 2 - это арифметическое выражение
+// a = b * 2 - это выражение присвоения
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>;</h2>
+            <pre class="size-S"><code data-trim>
+function getTrue() {
+    return true;
+}
+
+getTrue();    // true
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>;</h2>
+            <pre class="size-S"><code data-trim>
+function getTrue() {
+    return
+        true;
+}
+
+getTrue();    // undefined
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Основы языка</h2>
+            <h4>Строгий режим</h4>
+        </section>
+
+        <section>
+            <h3>Строгий режим</h3>
+            <pre class="size-S"><code data-trim>
+'use strict';
+
+// этот код будет работать
+// по современному стандарту ES5
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Зарезервированные слова</h3>
+            <pre class="size-S css"><code data-trim>
+implements let     private
+interface  package protected
+public     yield   static
+            </code></pre>
+            <a href="https://clck.ru/9auhk">https://clck.ru/9auhk</a>
+        </section>
+
+        <section>
+            <h3>Строгий режим</h3>
+            <p><a href="http://ecma262-5.com/ELS5_HTML.htm#Annex_C">Спецификация</a></p>
+            <p><a href="http://java-script.limewebs.com/strictMode/test_hosted.html">Чекер</a></p>
+        </section>
+
+        <section>
+            <h1>Пуск!</h1>
+        </section>
+
+        <section>
+            <h2>Пример запуска</h2>
+            <pre class="size-M"><code data-trim contenteditable>
+console.log('Hello, world!');
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>В браузере</h2>
+            <pre class="size-M"><code data-trim contenteditable>
+console.log('Hello, world!');
+            </code></pre>
+        </section>
+
+        <section>
+            <h2><a href="https://nodejs.org/">https://nodejs.org</a></h2>
+        </section>
+
+        <section>
+            <h2>NodeJS</h2>
+            <pre class="size-M javascript"><code data-trim contenteditable>
+// index.js
+console.log('Hello, world!');
+            </code></pre>
+
+            <pre class="size-M fragment"><code data-trim contenteditable>
+$ node index.js
+            </code></pre>
+        </section>
+
+        <section>
+            <section>
+                <h2>Редакторы кода</h2>
+                <ul>
+                    <li><a href="http://www.sublimetext.com/">Sublime</a></li>
+                    <li><a href="https://atom.io/">Atom</a></li>
+                    <li><a href="https://notepad-plus-plus.org/">Notepad++</a></li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>WebStorm</h2>
+                <img src="images/webStorm.png" alt="WebStorm"/>
+            </section>
+
+            <section>
+                <h3>Лицензия для WebStorm</h3>
+                <ol>
+                    <li>завести <a href="https://https://account.jetbrains.com/login">JetBrains Account</a></li>
+                    <li>подтвердить статус студента:
+                        <ul>
+                            <li>при помощи карточки <a href="https://www.isic.org/">ISIC</a></li>
+                            <li>при электронной почты университета (в домене .edu)</li>
+                            <li>при помощи скана студенческого билета</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p>Подать заявку можно <a href="https://www.jetbrains.com/shop/eform/students">здесь</a></p>
+            </section>
+        </section>
+
+        <section>
+            <h2>GitHub</h2>
+            <h4>"Три уровня дзена"</h4>
+        </section>
+
+        <section>
+            <h2>guide</h2>
+            <h4><a href="https://github.com/urfu-2015/guides/blob/master/how-to-pull-request.md">https://github.com/urfu-2015/guides/blob/master/how-to-pull-request.md</a></h4>
+        </section>
+
+        <section>
+            <section>
+                <h2>Регистрация</h2>
+            </section>
+
+            <section>
+                <h5>регистрируемся по ссылке <a href="http://github.com/join">http://github.com/join</a></h5>
+                <img src="https://img-fotki.yandex.ru/get/6408/32167648.0/0_133851_81fbcf7_orig" alt="регистрируемся"/>
+            </section>
+
+            <section>
+                <h5>входим по ссылке <a href="http://github.com/login">http://github.com/login</a></h5>
+                <img src="https://img-fotki.yandex.ru/get/6307/32167648.0/0_13384d_1ee05872_orig" alt="входим"/>
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h2>Web</h2>
+            </section>
+
+            <section>
+                <h5>Форк</h5>
+                <img src="https://img-fotki.yandex.ru/get/9827/32167648.0/0_133854_3102696d_orig">
+            </section>
+
+            <section>
+                <img src="https://img-fotki.yandex.ru/get/6613/32167648.0/0_133b5d_89415981_orig">
+            </section>
+
+            <section>
+                <h5>Редактирование</h5>
+                <img src="https://img-fotki.yandex.ru/get/16129/32167648.0/0_133b5b_8098c099_orig">
+                <img src="https://img-fotki.yandex.ru/get/4528/32167648.0/0_133b5c_b5a8b2ab_orig">
+            </section>
+
+            <section>
+                <h5>Коммит</h5>
+                <img src="https://img-fotki.yandex.ru/get/16129/32167648.0/0_133b5a_3c9fccae_orig">
+            </section>
+
+            <section>
+                <h5>Создаём pull request</h5>
+                <img src="https://img-fotki.yandex.ru/get/15519/32167648.0/0_133b5e_4d75b07a_orig">
+            </section>
+
+            <section>
+                <h5>Создаём pull request</h5>
+                <img src="https://img-fotki.yandex.ru/get/6406/32167648.0/0_133b5f_e318decb_orig">
+            </section>
+
+            <section>
+                <h5>Создаём pull request</h5>
+                <img src="https://img-fotki.yandex.ru/get/6843/32167648.0/0_133b60_979140aa_orig">
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h2>Приложение</h2>
+                <h4>windows</h4>
+            </section>
+
+            <section>
+                <h5>Форк</h5>
+                <img src="https://img-fotki.yandex.ru/get/9827/32167648.0/0_133854_3102696d_orig">
+            </section>
+
+            <section>
+                <h5>Скачиваем приложение <br/><a href="https://desktop.github.com/">https://desktop.github.com/</a></h5>
+                <img src="https://img-fotki.yandex.ru/get/4406/32167648.0/0_13384a_dc19a8f2_orig">
+            </section>
+
+            <section>
+                <h5>Устанавливаем. Вводим логин и пароль</h5>
+                <img src="https://img-fotki.yandex.ru/get/6202/32167648.0/0_133852_43021b38_orig">
+            </section>
+
+            <section>
+                <h5>Вводим полное имя и электронную почту</h5>
+                <img src="https://img-fotki.yandex.ru/get/9309/32167648.0/0_133850_5b9707d2_orig">
+            </section>
+
+            <section>
+                <h5>Клонируем репозиторий с задачей</h5>
+                <img src="https://img-fotki.yandex.ru/get/6444/32167648.0/0_133855_64f040ea_orig">
+            </section>
+
+            <section>
+                <h5>Выбираем рабочую директорию</h5>
+                <img src="https://img-fotki.yandex.ru/get/6743/32167648.0/0_133847_fd40a417_orig">
+            </section>
+
+            <section>
+                <h5>Заходим в директорию</h5>
+                <img src="https://img-fotki.yandex.ru/get/4211/32167648.0/0_13384b_772b4c2e_orig">
+            </section>
+
+            <section>
+                <h5>Решаем задачу</h5>
+                <img src="https://img-fotki.yandex.ru/get/3914/32167648.0/0_13384c_7fc4d032_orig">
+            </section>
+
+            <section>
+                <h5>Коммит</h5>
+                <img src="https://img-fotki.yandex.ru/get/4/32167648.0/0_133b64_d1266a52_orig">
+            </section>
+
+            <section>
+                <h5>Сообщение</h5>
+                <img src="https://img-fotki.yandex.ru/get/16108/32167648.0/0_133849_c2daf700_orig">
+            </section>
+
+            <section>
+                <h5>Отправить решение</h5>
+                <img src="https://img-fotki.yandex.ru/get/4201/32167648.0/0_133b67_6dc2d790_L">
+            </section>
+
+            <section>
+                <h5>Готово!</h5>
+                <img src="https://img-fotki.yandex.ru/get/3700/32167648.0/0_13384f_90bbfdd2_orig">
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h2>git shell</h2>
+            </section>
+
+            <section>
+                <h2>windows</h2>
+                <ul>
+                    <li><a href="https://git-scm.com/download/">https://git-scm.com/download/</a></li>
+                    <li><a href="https://desktop.github.com/">https://desktop.github.com/</a></li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>linux</h2>
+                <p>Уже все есть</p>
+            </section>
+
+            <section>
+                <h5>Форк</h5>
+                <img src="https://img-fotki.yandex.ru/get/9827/32167648.0/0_133854_3102696d_orig">
+            </section>
+
+            <section>
+                <pre class="r size-XS"><code data-trim>
+# Клонируем репозиторий
+git clone https://github.com/gogoleff/
+    verstka-tasks-1.git
+                </code></pre>
+
+                <pre class="r size-XS fragment"><code data-trim>
+# Заходим в созданную папку с клоном
+cd verstka-tasks-1
+                </code></pre>
+
+                <pre class="r size-XS fragment"><code data-trim>
+# Решаем задачу в любимом редакторе...
+                </code></pre>
+
+                <pre class="r size-XS fragment"><code data-trim>
+# Добавляем все измененные файлы через пробел
+git add index.html
+                </code></pre>
+
+                <pre class="r size-XS fragment"><code data-trim>
+# Коммитим (утверждаем изменения)
+git commit -m "Моё решение задачи"
+                </code></pre>
+
+                <pre class="r size-XS fragment"><code data-trim>
+# Отправляем изменения в удалённый репозиторий
+git push origin master
+                </code></pre>
+            </section>
+
+            <section>
+                <h5>Если нужны правки</h5>
+                <pre class="r size-XS fragment"><code data-trim>
+# Добавляем все измененные файлы через пробел
+git add index.html
+                </code></pre>
+
+                <pre class="r size-XS fragment"><code data-trim>
+# Коммитим (утверждаем изменения)
+git commit -m "Моё решение задачи"
+                </code></pre>
+
+                <pre class="r size-XS fragment"><code data-trim>
+# Отправляем изменения в удалённый репозиторий
+git push origin master
+                </code></pre>
+            </section>
+
+            <section>
+                <h5>Создаём pull request</h5>
+                <img src="https://img-fotki.yandex.ru/get/15519/32167648.0/0_133b5e_4d75b07a_orig">
+            </section>
+
+            <section>
+                <h5>Создаём pull request</h5>
+                <img src="https://img-fotki.yandex.ru/get/6406/32167648.0/0_133b5f_e318decb_orig">
+            </section>
+
+            <section>
+                <h5>Создаём pull request</h5>
+                <img src="https://img-fotki.yandex.ru/get/6843/32167648.0/0_133b60_979140aa_orig">
+            </section>
+        </section>
+
+
+        <section>
+            <h2>Домашнее задание</h2>
+            <h4><a href="https://github.com/urfu-2015/javascript-tasks-1">XXL</a></h4>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: false,
+        progress: true,
+        slideNumber: true,
+        history: true,
+        center: true,
+        hideAddressBar: true,
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+            {
+                src: 'lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            }
+            },
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: 'plugin/highlight/highlight.js', async: true, condition: function () {
+                return !!document.querySelector('pre code');
+            }, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            },
+            { src: 'plugin/zoom-js/zoom.js', async: true },
+            { src: 'plugin/notes/notes.js', async: true }
+        ]
+    });
+
+</script>
+
+</body>
+</html>
