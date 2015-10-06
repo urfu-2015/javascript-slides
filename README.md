@@ -3,3 +3,4 @@
 
 ### Лекции
 1. [История развития, способы запуска, обзор IDE](https://rawgit.com/urfu-2015/javascript-slides/master/01-intro/index.html) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-1))
+2. [Основы](https://rawgit.com/urfu-2015/javascript-slides/master/02-basic/index.html) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-2))

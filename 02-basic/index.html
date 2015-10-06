@@ -1,0 +1,1405 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>JavaScript, Basic</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="../css/reveal.css">
+    <link rel="stylesheet" href="../css/theme/yandex.css" id="theme">
+    <link rel="stylesheet" href="./css/user.css">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? '../css/print/pdf.css' : '../css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body class="yandex">
+
+<div class="reveal">
+    <div class="slides">
+        <section class="large">
+            <h1>JavaScript</h1>
+            <h4>Основы</h4>
+
+            <p style="text-align: center;">
+                <size-S><span style="color: red">М</span>ангин Александр</size-S>
+                <br>
+                <size-S><span style="color: red">Р</span>азработчик интерфейсов</size-S>
+            </p>
+        </section>
+
+        <section>
+            <h3>В прошлой серии:</h3>
+
+            <ul>
+                <li>История развития JS</li>
+                <li class="fragment" data-fragment-index="0">Hello world</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Сегодня:</h3>
+
+            <ul>
+                <li class="fragment" data-fragment-index="1">Функции</li>
+                <li class="fragment" data-fragment-index="2">Объекты</li>
+                <li class="fragment" data-fragment-index="3">Массивы</li>
+                <li class="fragment" data-fragment-index="4">Типы данных</li>
+                <li class="fragment" data-fragment-index="5">Приведение типов</li>
+                <li class="fragment" data-fragment-index="6">Операторы</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Object</h3>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Это словарь, состоящий из отображение 'ключей' -> 'в значение'(*)</li>
+                <li class="fragment" data-fragment-index="1">Ключи - это строки</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Объявление объекта</h3>
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var student = {
+    id: 123,
+    fio: 'Пупкин Василий',
+    info: {
+        'head-teacher': 42,
+        subjects: [{}, {}]
+    }
+};
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Обращения к свойствам объекта</h4>
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var student = {
+    id: 123,
+    fio: 'Пупкин Василий',
+};
+
+student.fio;
+student['fio'];
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+// 'Пупкин Василий';
+// 'Пупкин Василий';
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Модификация полей</h3>
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var student = {
+    id: 123,
+    fio: 'Пупкин Василий',
+};
+
+student.fio = 'Пупкин Николай';
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+student['fio'] = 'Пупкин Николай';
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Некоторые полезные методы</h3>
+        </section>
+
+        <section>
+            <h3>Получение всех ключей объекта</h3>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+var object = {
+    id: 42,
+    fio: 'Пупкин Василий Васильевич'
+};
+
+Object.keys(object);
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+// ['id', 'fio'] or ['fio', 'id']
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Копирование объекта</h3>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+var data = {
+    id: 42,
+    fio: 'Пупкин Василий Васильевич'
+};
+
+var clone = data;
+            </code></pre>
+
+            <pre class="size-S javascript fragment strike" data-fragment-index="1"><code data-trim contenteditable>
+var clone = data;
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+var clone = Object.assign({}, data);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Реализовать функцию deepAssign</h3>
+
+            <ul class="fragment" data-fragment-index="0">
+                <li>Функция принимает 2 аргумента target и source</li>
+                <li>Объект source нужно копировать полностью, а не поверхностно</li>
+                <li>При изменении полей target, объект source не должен модифицироваться</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Подробнее об объектах в следующих сериях</h3>
+        </section>
+
+        <section>
+            <h3>Функции</h3>
+        </section>
+
+        <section>
+            <h3>Объявление функций</h3>
+            <pre class="size-S javascript"><code data-trim contenteditable>
+function add(a, b) {
+    var sum = a + b;
+
+    return result;
+}
+            </code></pre>
+            <pre class="size-S javascript"><code data-trim contenteditable>
+function empty(rawDate) {
+
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Вызов функций</h3>
+            <pre class="size-S javascript"><code data-trim contenteditable>
+add(2 + 2);
+empty();
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+// {day: 1, month: 9, year: 2015}
+// undefined
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Подробнее о функция в следующих сериях</h3>
+        </section>
+
+        <section>
+            <h3>Массивы</h3>
+        </section>
+
+        <section>
+            <h3>Объявление массива</h3>
+
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+var numbers = [1, 1, 2, 3];
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+var array = new Array(1000);
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="2"><code data-trim contenteditable>
+var array = new Array(1, 1, 2, 3);
+            </code></pre>
+
+            <pre class="size-S javascript fragment strike" data-fragment-index="3"><code data-trim contenteditable>
+new Array(1000);
+new Array(1, 1, 2, 3);
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Получение элемента по индексу</h4>
+
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+var numbers = [1, 1, 2, 3, 5, 8];
+
+numbers[5];
+            </code></pre>
+
+            <pre class="size-S javascript fragment"  data-fragment-index="1"><code data-trim contenteditable>
+// 8
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Длина массива</h3>
+
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+var numbers = [1, 1, 2, 3, 5, 8];
+
+numbers.length;
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+// 6
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Добавление элементов</h3>
+
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+var numbers = [1, 1, 2, 3, 5, 8];
+var next = numbers[4] + numbers[5];
+
+numbers.push(next);
+
+numbers;
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+// [1, 1, 2, 3, 5, 8, 13]
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Склейка массивов</h3>
+
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+var part1 = [1, 1, 2, 3];
+var part2 = [5, 8];
+var part3 = [13, 21];
+var result = part1
+    .concat(part2, part3);
+
+result;
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+// [1, 1, 2, 3, 5, 8, 13, 21]
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Массив, как очередь</h3>
+
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+var queue = [];
+
+queue.unshift(1);
+queue.unshift(2);
+queue.unshift(3);
+
+queue;
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+[3, 2, 1]
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="2"><code data-trim contenteditable>
+queue.shift(); //3
+queue.shift(); //2
+queue.shift(); //1
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Массив, как стек</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var stack = [];
+
+stack.push(1);
+stack.push(2);
+stack.push(3);
+
+stack;
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+[1, 2, 3]
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="2"><code data-trim contenteditable>
+stack.pop(); //3
+stack.pop(); //2
+stack.pop(); //1
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Типы данных</h3>
+
+            <ul>
+                <li class="fragment" data-fragment-index="0">null <span class="fragment" data-fragment-index="6">*</span></li>
+                <li class="fragment" data-fragment-index="1">undefined</li>
+                <li class="fragment" data-fragment-index="2">boolean</li>
+                <li class="fragment" data-fragment-index="3">number</li>
+                <li class="fragment" data-fragment-index="4">string</li>
+                <li class="fragment" data-fragment-index="5">object</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Null</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var meaningOfLife = null;
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Пример: Null</h4>
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var storage = ...;
+function findUser(id) {
+    var result = storage.get(id);
+    if (result) {
+        return result;
+    }
+    return null;
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Null</h3>
+
+            <ul>
+                <li>Это тип данных</li>
+                <li class="fragment" data-fragment-index="0">Этот тип данных имеет единственное значение</li>
+                <li class="fragment" data-fragment-index="1">Используется со следующим смыслом:
+                    <ul class="fragment" data-fragment-index="2">Значение неизвестно</ul>
+                    <ul class="fragment" data-fragment-index="3">Ничего</ul>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Типы данных</h3>
+
+            <ul>
+                <li>null</li>
+                <li>undefined *</li>
+                <li>boolean</li>
+                <li>number</li>
+                <li>string</li>
+                <li>object</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Пример: Undefined</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var newVariable;
+newVariable;
+            </code></pre>
+
+             <pre class="size-S javascript"><code data-trim contenteditable>
+// undefined
+             </code></pre>
+        </section>
+
+        <section>
+            <h3>Пример: Undefined</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+function calculateNext(numbers) {
+    var l = numbers.length;
+    var a = numbers[l - 2];
+    var b = numbers[l - 1];
+    numbers.push(a + b);
+}
+var numbers = [1, 1, 2, 3, 5];
+calculateNext(numbers);
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+// undefined
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Пример: Undefined</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+function add(a, b) {
+    console.log(a);
+    console.log(b);
+}
+
+add();
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+// undefined
+// undefined
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Undefined</h3>
+
+            <ul>
+                <li>Это тип данных</li>
+                <li>Этот тип данных имеет единственное значение</li>
+                <li>Используется, когда значение не установлено</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Типы данных</h3>
+
+            <ul>
+                <li>null</li>
+                <li>undefined</li>
+                <li>boolean *</li>
+                <li>number</li>
+                <li>string</li>
+                <li>object</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Boolean</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+function canShowContent(user) {
+    if (user.age >= 18) {
+        return true;
+    }
+
+    return false;
+}
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+function canShowContent(user) {
+    return user.age >= 18;
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Типы данных</h3>
+
+            <ul>
+                <li>null</li>
+                <li>undefined</li>
+                <li>boolean</li>
+                <li>number *</li>
+                <li>string</li>
+                <li>object</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Кратко о числах</h3>
+
+            <ul>
+                <li class="fragment" data-fragment-index="0">целые/дробные</li>
+                <li class="fragment" data-fragment-index="1">Number.EPSILON</li>
+                <li class="fragment" data-fragment-index="2">Number.MAX_SAFE_INTEGER/MIN_SAFE_INTEGER</li>
+                <li class="fragment" data-fragment-index="3">Number.MAX_VALUE/MIN_VALUE</li>
+                <li class="fragment" data-fragment-index="5">IEEE 754</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Деление на ноль в обычном языке</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+1 / 0;
+            </code></pre>
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// ZeroDivisionError: integer division
+// or modulo by zero
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Деление на ноль</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+                var result = 1 / 0;
+            </code></pre>
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+                result; // Infinity
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Деление на ноль</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+                var result = -1 / 0;
+            </code></pre>
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+                result; // -Infinity
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Деление ноль на ноль</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var result = 0 / 0;
+            </code></pre>
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+result; // NaN
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>NaN</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var result = 0 / 0;
+
+result; // NaN
+            </code></pre>
+
+            <pre class="size-S fragment javascript strike" data-fragment-index="0"><code data-trim contenteditable>
+if (result === NaN) {
+    result = 0;
+}
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="1"><code data-trim contenteditable>
+if (isNaN(result)) {
+    result = 0;
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>isFinite</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+isFinite(NaN); // false
+isFinite(Infinity); // false
+isFinite(-Infinity); // false
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+isFinite(42); // true
+isFinite(0); // true
+isFinite(5e10); // true
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Округления</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var sum = 0.1 + 0.2;
+
+sum === 0.3;
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// false
+sum; //0.30000000000000004
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Типы данных</h3>
+
+            <ul>
+                <li>null</li>
+                <li>undefined</li>
+                <li>boolean</li>
+                <li>number</li>
+                <li>string *</li>
+                <li>object</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Длина строки</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var question = 'УрФУ';
+
+question.length;
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+// 4
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Получение символа строки</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var question = 'УрФУ';
+
+question[1];
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+// 'р'
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Модификация строк</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var question = 'екатеринбург';
+question[0] = 'Е';
+question;
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// 'екатеринбург'; ?!
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Некоторые полезные методы для работы со строками</h3>
+        </section>
+
+        <section>
+            <h3>Объединение строк</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var name = 'Alex';
+var surname = 'Mangin';
+name + ' ' + surname;
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// 'Alex Mangin'
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>concat</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var name = 'Alex';
+var surname = 'Mangin';
+
+name.concat(' ', surname);
+            </code></pre>
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// 'Alex Mangin'
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>indexOf и lastIndexOf</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var queue = '0000111111000';
+var index = queue.indexOf('1');
+var lastIndex = queue
+                .lastIndexOf('1');
+
+lastIndex - index + 1;
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// 6
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>slice</h3>
+
+            <pre class="size-S"><code data-trim contenteditable>
+var str = 'Число: 42';
+var rawNumber = str.slice(7);
+            </code></pre>
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// 42
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>slice</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var str = 'Число: 42 и точка';
+var rawNumber = str.slice(7, 9);
+
+rawNumber;
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// 42
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>substr</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var str = 'Число: 42 и точка';
+var rawNumber = str.substr(7, 2);
+
+rawNumber;
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// 42
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>toLocaleLowerCase</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var message = 'Без учета НДС 18%';
+
+message.toLocaleLowerCase();
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// без учета ндс 18%
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>toLocaleUpperCase</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var message = 'купить';
+
+message.toLocaleUpperCase();
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// КУПИТЬ
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>trim</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var rawUserAge = '   18  ';
+
+rawUserAge.trim();
+            </code></pre>
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// '18'
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>split</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var str = '13 42 4';
+var rawNumbers = str.split(' ');
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+// ['13', '42', '4']
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Типы данных</h3>
+
+            <ul>
+                <li>null</li>
+                <li>undefined</li>
+                <li>boolean</li>
+                <li>number</li>
+                <li>string</li>
+                <li>object *</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Оператор typeof</h3>
+        </section>
+
+        <section>
+            <h3>Оператор typeof</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var some;
+// что-то присваиваем
+typeof some;
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Оператор typeof</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+typeof 0;
+typeof undefined;
+typeof true;
+typeof 'foo';
+typeof {};
+typeof null;
+typeof function(){};
+typeof [];
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Оператор typeof</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+typeof 0;            // 'number'
+typeof undefined;
+typeof true;
+typeof 'foo';
+typeof {};
+typeof null;
+typeof function(){};
+typeof [];
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Оператор typeof</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+typeof 0;            // 'number'
+typeof undefined;    // 'undefined'
+typeof true;
+typeof 'foo';
+typeof {};
+typeof null;
+typeof function(){};
+typeof [];
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Оператор typeof</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+typeof 0;            // 'number'
+typeof undefined;    // 'undefined'
+typeof true;         // 'boolean'
+typeof 'foo';
+typeof {};
+typeof null;
+typeof function(){};
+typeof [];
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Оператор typeof</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+typeof 0;            // 'number'
+typeof undefined;    // 'undefined'
+typeof true;         // 'boolean'
+typeof 'foo';        // 'string'
+typeof {};
+typeof null;
+typeof function(){};
+typeof [];
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Оператор typeof</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+typeof 0;            // 'number'
+typeof undefined;    // 'undefined'
+typeof true;         // 'boolean'
+typeof 'foo';        // 'string'
+typeof {};           // 'object'
+typeof null;
+typeof function(){};
+typeof [];
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Оператор typeof</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+typeof 0;            // 'number'
+typeof undefined;    // 'undefined'
+typeof true;         // 'boolean'
+typeof 'foo';        // 'string'
+typeof {};           // 'object'
+typeof null;         // 'object'
+typeof function(){};
+typeof [];
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Оператор typeof</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+typeof 0;            // 'number'
+typeof undefined;    // 'undefined'
+typeof true;         // 'boolean'
+typeof 'foo';        // 'string'
+typeof {};           // 'object'
+typeof null;         // 'object'
+typeof function(){}; // 'function'
+typeof [];
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Оператор typeof</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+typeof 0;            // 'number'
+typeof undefined;    // 'undefined'
+typeof true;         // 'boolean'
+typeof 'foo';        // 'string'
+typeof {};           // 'object'
+typeof null;         // 'object'
+typeof function(){}; // 'function'
+typeof [];            // 'object'
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Пример использования</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var undef = 'undefined';
+
+if (typeof localStorage !== undef) {
+   // ура!
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Пример использования</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+add(2, 5); // 7
+add({a: 2, b: 3}); // 5
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+function add(a, b) {
+    if (typeof a === 'object') {
+        b = a.b;
+        a = a.a;
+    }
+
+    return a + b;
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Приведение примитивных типов</h3>
+        </section>
+
+        <section>
+            <h3>Приведение к Boolean</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var price = 100500;
+var isFree = Boolean(price);
+            </code></pre>
+
+             <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+var isFree = !!price;
+             </code></pre>
+
+            <pre class="size-S fragment javascript strike" data-fragment-index="1"><code data-trim contenteditable>
+var isFree = !!price;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Алгоритм приведение к boolean</h3>
+
+            <ul>
+                <li>Если '' => false</li>
+                <li>Если 0 => false</li>
+                <li>Если false => false</li>
+                <li>Если null => false</li>
+                <li>Если NaN => false</li>
+                <li>Если undefined => false</li>
+                <li>Иначе true</li>
+            </ul>
+        </section>
+        <section class="no-transition">
+            <h3>Преобразование к числу</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var amount = '9';
+var totalAmount = 0;
+            </code></pre>
+
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+amount = Number(amount);
+            </code></pre>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+totalAmount = totalAmount + amount;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Преобразование к числу</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var amount = '9';
+var totalAmount = 0;
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+amount = +amount;
+            </code></pre>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+totalAmount = totalAmount + amount;
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Преобразование к числу</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var amount = '9';
+var totalAmount = 0;
+            </code></pre>
+
+            <pre class="size-S javascript strike"><code data-trim contenteditable>
+amount = +amount;
+            </code></pre>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+totalAmount = totalAmount + amount;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Нечеткое преобразование к числу</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var amount = '9 штук.';
+var totalAmount = 0;
+            </code></pre>
+
+            <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+amount = parseInt(amount, 10);
+            </code></pre>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+totalAmount = totalAmount + amount;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Нечеткое преобразование к числу</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var percent = '9.5 землекопа.';
+            </code></pre>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+percent = parseFloat(amount);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Приведение к String</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var price = 100500;
+var message = 'Цена: ' + price;
+            </code></pre>
+
+             <pre class="size-S fragment javascript" data-fragment-index="0"><code data-trim contenteditable>
+var message = 'Цена: ' +
+                 String(price);
+             </code></pre>
+        </section>
+
+        <section>
+            <h3>Операторы</h3>
+        </section>
+
+        <section>
+            <h3>Оператор +</h3>
+
+            <ul>
+                <li>Сложение чисел</li>
+                <li>Унарный плюс</li>
+                <li>Объединение строк</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Сложение чисел</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var a = 2;
+var b = 3;
+
+a + b; // 5
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h3>Унарный плюс</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var a = +2;
+var b = '3';
+
+a + +b; // 5
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h3>Объединение строк</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var a = 'some' + 'other';
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h3>Объединение строк</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+var a = 2 + 'other';
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h3>Алгоритм работы '+'</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+function add(a, b) {
+    if (typeof(a) === 'string' ||
+        typeof(b) === 'string') {
+        return concat(toString(a),
+                      toString(b));
+    } else {
+        return sum(toNumber(a),
+                   toNumber(b));
+    }
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>==</h3>
+        </section>
+
+        <section>
+            <h3>Алгоритм Абстрактного сравнения</h3>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Если типы a и b равны, то сравниваем "как есть"</li>
+                <li class="fragment" data-fragment-index="1">Если типы a и b не равны, то приводим типы друг к другу</li>
+                <li class="fragment" data-fragment-index="2">И идем на первый шаг</li>
+            </ul>
+        </section>
+
+        <section>
+            <section style="padding: 0">
+<img style="margin: 0" src="images/equal.png" alt="node"/>
+            </section>
+        </section>
+
+        <section>
+            <h3>===</h3>
+        </section>
+
+        <section>
+            <h3>Алгоритм строго сравнения</h3>
+            <ul>
+                <li>Если a и b имеют различные типы, то False</li>
+                <li>Иначе, сравниваем "как есть"</li>
+            </ul>
+        </section>
+
+        <section>
+            <section style="padding: 0">
+                <img style="margin: 0" src="images/strict-equal.png" alt="node"/>
+            </section>
+        </section>
+
+        <section>
+            <h3>Сравниваем "как есть"</h3>
+            <ul>
+                <li>Если boolean, то равны при равенстве значений</li>
+                <li>Если string, то равны при равенстве строк посимвольно</li>
+                <li>Если undefined or null, то равны</li>
+                <li>Если number, то равны если эквиваленты, но при NaN всегда различны</li>
+                <li>Если object, то равны если ссылаются на один и тот же объект</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Операторы || и &&</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+if (a > 0 || b  < 0 && c === '42') {
+   // сделай что-нибудь
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Операторы ||</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+a || b;
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+                false || 42;
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+                // 42;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Оператор ||</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+function someFunction(a) {
+    a = a || 42;
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Оператор &&</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+a && b;
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim contenteditable>
+true || 42;
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim contenteditable>
+// 42;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Короткий if</h3>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+if (object.someMethod) {
+    object.someMethod();
+}
+            </code></pre>
+
+            <pre class="size-S javascript"><code data-trim contenteditable>
+condition && someFunction();
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Итого:</h3>
+
+            <ul>
+                <li>Объекты</li>
+                <li>Функции</li>
+                <li>Массивы</li>
+                <li>Типы данных</li>
+                <li>Оператор typeof</li>
+                <li>Приведение типов</li>
+                <li>Операторы</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Спасибо за внимание!</h3>
+            <h4>Вопросы?</h4>
+
+            <h5>Slack: <span style="color: red">m</span>angin</h5>
+        </section>
+
+        <section>
+            <h3>Домашнее задание:</h3>
+            Телефонная книга
+        </section>
+    </div>
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.js"></script>
+
+<script>
+
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: false,
+        progress: true,
+        slideNumber: true,
+        history: true,
+        center: false,
+        hideAddressBar: true,
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+            {
+                src: '../lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            }
+            },
+            {
+                src: '../plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: '../plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: '../plugin/highlight/highlight.js', async: true, condition: function () {
+                return !!document.querySelector('pre code');
+            }, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            },
+            { src: '../plugin/zoom-js/zoom.js', async: true },
+            { src: '../plugin/notes/notes.js', async: true }
+        ]
+    });
+
+</script>
+
+</body>
+</html>
