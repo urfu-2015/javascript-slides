@@ -63,7 +63,7 @@
                 <h2>Установить</h2>
                 <pre class="size-L"><code data-trim>
 $ npm install
-# <какой то вывод...>
+# <какой-то вывод...>
                 </code></pre>
             </section>
 
@@ -267,7 +267,7 @@ npm run lint
         <section>
             <h3>Функции</h3>
             <ul>
-                <li>Чтобы не повторять код</li>
+                <li>Чтобы не повторять код (DRY)</li>
                 <li>Объединить группу действий</li>
                 <li>Повысить читаемость кода</li>
                 <li>Создать область видимости</li>
@@ -335,7 +335,7 @@ myMin(13);      // undefined
 
         <section>
             <h3>Аргументы</h3>
-            <pre class="size-M javascript"><code data-trim>
+            <pre class="size-S javascript"><code data-trim>
 function myMin(a, b) {
     if (b === undefined) {
         return a;
@@ -344,7 +344,7 @@ function myMin(a, b) {
     return a < b ? a : b;
 }
             </code></pre>
-            <pre class="size-M javascript fragment"><code data-trim>
+            <pre class="size-S javascript fragment"><code data-trim>
 myMin(13);      // 13
             </code></pre>
         </section>
@@ -528,9 +528,9 @@ binPow(10);  // 1024
         <section>
             <h3>Функция -</h3>
             <ul>
-                <li>аргумент другой функции;</li>
-                <li>результат работы функции;</li>
-                <li>присвоена в переменную;</li>
+                <li>аргумент другой функции</li>
+                <li>результат работы функции</li>
+                <li>присвоена в переменную</li>
             </ul>
         </section>
 
@@ -593,7 +593,7 @@ var add = function (x, y) {
 
         <section>
             <h3>function expression</h3>
-            <pre class="size-M javascript"><code data-trim>
+            <pre class="size-S javascript"><code data-trim>
 add(2, 3);
     // TypeError:
     // add is not a function
@@ -736,7 +736,7 @@ function greet() {
 
         <section>
           <h3>IIFE</h3>
-          <pre class="size-S javascript"><code data-trim>
+          <pre class="size-XS javascript"><code data-trim>
 function greet() {
     (function () {
         var text = 'Привет';
@@ -776,7 +776,7 @@ void function () {
 
             <section>
                 <h3>Блочная область видимости</h3>
-                <pre class="size-S javascript"><code data-trim>
+                <pre class="size-XS javascript"><code data-trim>
 function greet() {
     {
         let text = 'Привет';
