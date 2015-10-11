@@ -297,91 +297,130 @@ add(2, 3);   // 5
         </section>
 
         <section>
-            <h2>Вызов функции</h2>
+            <h3>Без return</h3>
             <pre class="size-M javascript"><code data-trim>
-function noReturn() {
+function lazy() {
 }
             </code></pre>
             <pre class="size-M javascript"><code data-trim>
-noReturn();   // undefined
-            </code></pre>
-        </section>
-
-        <section>
-            <h2>Аргументы</h2>
-            <pre class="size-M javascript"><code data-trim>
-function getArgY(x, y){
-    return y;
-}
-            </code></pre>
-            <pre class="size-M javascript"><code data-trim>
-getArgY(1);   // undefined
-            </code></pre>
-        </section>
-
-        <section>
-            <h2>Аргументы</h2>
-            <pre class="size-M javascript"><code data-trim>
-function add(x, y) {
-    return x + y;
-}
-            </code></pre>
-            <pre class="size-M javascript"><code data-trim>
-add(2);   // NaN
+lazy();   // undefined
             </code></pre>
         </section>
 
         <section>
             <h3>Аргументы</h3>
             <pre class="size-M javascript"><code data-trim>
-function add(x, y) {
-    if (y === undefined) {
-        y = 0;
+function asIs(x){
+    return x;
+}
+            </code></pre>
+            <pre class="size-M javascript"><code data-trim>
+asIs();   // undefined
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Аргументы</h3>
+            <pre class="size-M javascript"><code data-trim>
+function myMin(a, b) {
+    return a < b ? a : b;
+}
+            </code></pre>
+            <pre class="size-M javascript fragment"><code data-trim>
+myMin(2, 7);    // 2
+myMin(13, 7);   // 7
+myMin(13);      // undefined
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Аргументы</h3>
+            <pre class="size-M javascript"><code data-trim>
+function myMin(a, b) {
+    if (b === undefined) {
+        return a;
     }
 
-    return x + y;
+    return a < b ? a : b;
 }
             </code></pre>
             <pre class="size-M javascript fragment"><code data-trim>
-add(2);   // 2
+myMin(13);      // 13
             </code></pre>
         </section>
 
         <section>
-            <h3>Аргументы</h3>
+            <h3>Значение по умолчанию</h3>
             <pre class="size-M javascript"><code data-trim>
-function add(x, y) {
-    y = y || 0;
+function myMin(a, b) {
+    b = b || Infinity;
 
-    return x + y;
+    return a < b ? a : b;
 }
             </code></pre>
             <pre class="size-M javascript fragment"><code data-trim>
-add(2);   // 2
+myMin(2, 7);    // 2
+myMin(13, 7);   // 7
+myMin(-13);     // -13
             </code></pre>
         </section>
 
         <section>
-            <h3>Аргументы</h3>
-            <pre class="size-M javascript"><code data-trim>
-function add(x, y) {
-    return x + y;
+            <h3>Значение по умолчанию</h3>
+            <pre class="size-S javascript"><code data-trim>
+function getSalary(rate, days) {
+    days = days || 22;
+
+    return rate * days;
 }
             </code></pre>
-            <pre class="size-M javascript fragment"><code data-trim>
-add(2, 3, 4);   // 5
+            <pre class="size-S javascript fragment"><code data-trim>
+getSalary(3, 10); // 30
+getSalary(1);     // 22
+getSalary(2, 0);  // 44 ???
             </code></pre>
         </section>
 
         <section>
             <h3>Именованные аргументы</h3>
             <pre class="size-S javascript"><code data-trim>
-add({ x: 2, y: 3 })
+BMI({ m: 60, h: 1.7 }) // 20.7
             </code></pre>
             <pre class="size-S javascript fragment"><code data-trim>
-function add(params) {
-    return params.x + params.y;
+function BMI(params) {
+    var h = params.h;
+
+    return params.m / (h * h);
 }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Именованные аргументы</h3><h4 style="color: green">Достоинства</h4>
+            <ul>
+                <li>Неважен порядок аргументов</li>
+                <li>Неограниченное число аргументов</li>
+                <li>Легко рефакторить код</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Именованные аргументы</h3><h4 style="color: red">Недостатки</h4>
+            <ul>
+                <li>Неявный интерфейс</li>
+                <li>Неудобно работать с аргументами</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Лишние аргументы</h3>
+            <pre class="size-M javascript"><code data-trim>
+function myMin(a, b) {
+    return a < b ? a : b;
+}
+            </code></pre>
+            <pre class="size-M javascript fragment"><code data-trim>
+myMin(7, 5, 1);   // 5
             </code></pre>
         </section>
 
@@ -391,19 +430,18 @@ function add(params) {
 
         <section>
             <h3>arguments</h3>
-            <pre class="size-M javascript"><code data-trim>
-function (x, y) {
-    var sum = x + y;
+            <pre class="size-S javascript"><code data-trim>
+function myMin(a, b) {
+    var min = a < b ? a : b;
+    var c = arguments[2];
 
-    if (arguments[2]) {
-        sum += arguments[2];
-    }
-
-    return sum;
+    return c < min ? c : min;
 }
             </code></pre>
-            <pre class="size-M javascript fragment"><code data-trim>
-add(2, 3, 4);   // 9
+            <pre class="size-S javascript fragment"><code data-trim>
+myMin(2, 3, 4);    // 2
+myMin(20, 3, 4);   // 3
+myMin(20, 30, 4);  // 4
             </code></pre>
         </section>
 
@@ -421,7 +459,7 @@ function addMany() {
     return sum;
 }
             </code></pre>
-            <pre class="size-M javascript fragment"><code data-trim>
+            <pre class="size-XS javascript fragment"><code data-trim>
 addMany(2, 3, 4);   // 9
             </code></pre>
         </section>
@@ -431,71 +469,86 @@ addMany(2, 3, 4);   // 9
             <pre class="size-S javascript"><code data-trim>
 var args = [].slice.call(arguments);
             </code></pre>
-            <pre class="size-S javascript fragment"><code data-trim>
-arguments.slice = [].slice;
-var args = arguments.slice();
-            </code></pre>
         </section>
 
         <section>
             <h2>Методы функции</h2>
+            <h4>apply</h4>
+            <h4>bind</h4>
         </section>
 
         <section>
             <h3>apply</h3>
-            <pre class="size-M javascript"><code data-trim>
-addMany(2, 3, 4);                  // 9
-            </code></pre>
-            <pre class="size-M javascript fragment"><code data-trim>
-addMany([2, 3, 4]);                // "02,3,4"
-            </code></pre>
-            <pre class="size-M javascript fragment"><code data-trim>
-var numbers = [2, 3, 4];
-addMany.apply(null, numbers);  // 9
+            <pre class="size-S javascript"><code data-trim>
+Math.min(3, 5, 2, 6);        // 2
+
+var numbers = [3, 5, 2, 6];
+Math.min(numbers);           // NaN
             </code></pre>
         </section>
 
         <section>
-            <h3>bind</h3>
-            <pre class="size-M javascript"><code data-trim>
-var add2 = add.bind(null, 2);
-add2(3);    // 5;
-            </code></pre>
-            <pre class="size-M javascript fragment"><code data-trim>
-add(2, 3);
+            <h3>apply</h3>
+            <pre class="size-S javascript"><code data-trim>
+var numbers = [3, 5, 2, 6];
+Math.min.apply(null, numbers); // 2
             </code></pre>
         </section>
 
         <section>
-            <h2>Способы вызова</h2>
-        </section>
+            <h3>Частичное применение</h3>
+            <pre class="size-S javascript"><code data-trim>
+Math.pow(base, exponent);
 
-        <section>
-            <h3>Обычный</h3>
-            <pre class="size-L javascript"><code data-trim>
-add(2, 3);
+Math.pow(2, 4);           // 16
+Math.pow(2, 10);          // 1024
             </code></pre>
         </section>
 
         <section>
-            <h3>Конструктор</h3>
-            <pre class="size-L javascript"><code data-trim>
-var date = new Date();
-            </code></pre>
-            <pre class="size-L javascript fragment"><code data-trim>
-typeof date; // 'object'
-            </code></pre>
+            <h3>Частичное применение</h3>
+            <img src="images/bind.png" alt="bind"  width="100%"/>
         </section>
 
         <section>
-            <h3>Метод объекта</h3>
-            <pre class="size-M javascript"><code data-trim>
-Date.now(); // 1444214452237
+            <h3>Частичное применение</h3>
+            <pre class="size-S javascript"><code data-trim>
+var binPow = Math.pow.bind(null, 2);
+
+binPow(4);   // 16
+binPow(10);  // 1024
+            </code></pre>
+        </section>
+
+
+        <section>
+            <h2>Функции первого класса</h2>
+        </section>
+
+        <section>
+            <h3>Функция -</h3>
+            <ul>
+                <li>аргумент другой функции;</li>
+                <li>результат работы функции;</li>
+                <li>присвоена в переменную;</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Функции первого класса</h3>
+            <pre class="size-S javascript"><code data-trim>
+var numbers = [3, 5, 9];
+
+numbers.map(function (item) {
+    return item * 2;
+});     // [6, 10, 18]
             </code></pre>
         </section>
 
         <section>
             <h2>Способы объявления</h2>
+            <h4>function declaration</h4>
+            <h4>function expression</h4>
         </section>
 
         <section>
@@ -510,11 +563,22 @@ function add(x, y) {
         <section>
             <h3>function declaration</h3>
             <pre class="size-L javascript"><code data-trim>
-add(2, 3); // 5
+add(2, 3);   // 5
 
 function add(x, y) {
     return x + y;
 }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Как это видит интерпретатор</h3>
+            <pre class="size-L javascript"><code data-trim>
+function add(x, y) {
+    return x + y;
+}
+
+add(2, 3);   // 5
             </code></pre>
         </section>
 
@@ -531,7 +595,7 @@ var add = function (x, y) {
             <h3>function expression</h3>
             <pre class="size-M javascript"><code data-trim>
 add(2, 3);
-    // Uncaught TypeError:
+    // TypeError:
     // add is not a function
 
 var add = function (x, y) {
@@ -541,6 +605,7 @@ var add = function (x, y) {
         </section>
 
         <section>
+            <h3>Named function expression</h3>
             <pre class="size-S javascript"><code data-trim>
 var add = function hidden() {
     return typeof hidden;
@@ -551,7 +616,7 @@ typeof add;    // 'function'
             </code></pre>
             <pre class="size-S javascript fragment"><code data-trim>
 typeof hidden;
-    // uncaught ReferenceError:
+    // ReferenceError:
     // hidden is not defined
             </code></pre>
             <pre class="size-S javascript fragment"><code data-trim>
@@ -560,19 +625,38 @@ add();         // 'function'
         </section>
 
         <section>
+            <h3>Факториал</h3>
             <pre class="size-S javascript"><code data-trim>
-var fac = function me(n) {
-    if (n > 0) {
-        return n * me(n-1);
-    } else {
-        return 1;
-    }
-};
+var factorial = function me(n) {
+    return (n === 1) ?
+        1 : n * me(n - 1);
+}
             </code></pre>
             <pre class="size-S javascript fragment"><code data-trim>
-console.log(fac(3)); // 6
+factorial(3); // 6
             </code></pre>
         </section>
+
+        <!-- <section>
+            <h3>Кеширование</h3>
+            <pre class="size-S javascript"><code data-trim>
+var factorial = function(n) {
+    if (!factorial[n]) {
+       factorial[n] = (n === 1) ?
+           1 : n * factorial(n - 1);
+    }
+    return factorial[n];
+}
+            </code></pre>
+            <pre class="size-S javascript fragment"><code data-trim>
+factorial(3);   // 6
+factorial[3] = 100500;
+factorial(3);   // 100500
+            </code></pre>
+            <p class="fragment">
+                :-(
+            </p>
+        </section> -->
 
         <section>
             <h3>Конструктор Function</h3>
@@ -583,61 +667,50 @@ add(2, 3);
         </section>
 
         <section>
-            <h3>Облость видимости</h3>
+            <h2>Область видимости</h2>
         </section>
 
         <section>
-          <pre class="size-S javascript"><code data-trim>
+            <h3>Область видимости</h3>
+            <pre class="size-S javascript"><code data-trim>
 function greet() {
     var text = 'Привет';
-    console.log(text);
+    console.log(text);  // 'Привет'
 }
-          </code></pre>
-          <pre class="size-S javascript fragment"><code data-trim>
-greet(); // 'Привет'
-          </code></pre>
-          <pre class="size-S javascript fragment"><code data-trim>
+
 console.log(text);
-    // Uncaught ReferenceError:
+    // ReferenceError:
     // text is not defined
           </code></pre>
         </section>
 
         <section>
           <h3>Вложенные функции</h3>
-          <pre class="size-S javascript"><code data-trim>
+          <pre class="size-XS javascript"><code data-trim>
 function greet() {
     var text = 'Привет';
 
     function nested() {
-        console.log(text);
+        console.log(text); // 'Привет'
     }
-
-    nested();
 }
-          </code></pre>
-          <pre class="size-S javascript fragment"><code data-trim>
-greet(); // 'Привет'
           </code></pre>
         </section>
 
         <section>
           <h3>Затенение</h3>
-          <pre class="size-S javascript"><code data-trim>
+          <pre class="size-XS javascript"><code data-trim>
 function greet() {
     var text = 'Привет';
 
     function nested() {
         var text = 'Добрый день';
 
-        console.log(text);
+        console.log(text); // 'Добрый день'
     }
 
-    nested();
+    console.log(text); // 'Привет'
 }
-          </code></pre>
-          <pre class="size-S javascript fragment"><code data-trim>
-greet(); // 'Добрый день'
           </code></pre>
         </section>
 
@@ -649,12 +722,16 @@ function greet() {
         var text = 'Привет';
     }
 
-    console.log(text);
+    console.log(text); // 'Привет'
 }
           </code></pre>
-          <pre class="size-S javascript fragment"><code data-trim>
-greet(); // 'Привет'
-          </code></pre>
+        </section>
+
+        <section>
+            <h3>IIFE</h3>
+            <blockquote cite="https://en.wikipedia.org/wiki/Immediately-invoked_function_expression">
+                immediately-invoked function expression
+            </blockquote>
         </section>
 
         <section>
@@ -666,10 +743,9 @@ function greet() {
     }());
 
     console.log(text);
+        // ReferenceError:
+        //     text is not defined
 }
-          </code></pre>
-          <pre class="size-S javascript fragment"><code data-trim>
-greet(); // Reference Error
           </code></pre>
         </section>
 
@@ -707,48 +783,8 @@ function greet() {
     }
 
     console.log(text);
-}
-                </code></pre>
-                <pre class="size-S javascript fragment"><code data-trim>
-greet(); // Error
-                </code></pre>
-            </section>
-
-            <section>
-                <h3>Значения по умолчанию</h3>
-                <pre class="size-S javascript"><code data-trim>
-function add(x, y = 0) {
-    return x + y;
-}
-                </code></pre>
-                <pre class="size-S javascript fragment"><code data-trim>
-add(3); // 3
-                </code></pre>
-            </section>
-
-            <section>
-                <h3>Именованные аргументы</h3>
-                <pre class="size-S javascript"><code data-trim>
-function add({ x, y }) {
-    return x + y;
-}
-                </code></pre>
-                <pre class="size-S javascript fragment"><code data-trim>
-add({ x: 1, y: 2}); // 3
-                </code></pre>
-            </section>
-
-            <section>
-                <h3>variadic functions</h3>
-                <pre class="size-S javascript"><code data-trim>
-function add(...args) {
-    var sum = 0;
-
-    for (var i, l = args.length; i < l; i += 1) {
-        sum += args[i];
-    }
-
-    return;
+        // ReferenceError:
+        //    text is not defined
 }
                 </code></pre>
             </section>
@@ -768,7 +804,7 @@ function add(...args) {
     // Full list of configuration options available at:
     // https://github.com/hakimel/reveal.js#configuration
     Reveal.initialize({
-        controls: false,
+        controls: true,
         progress: true,
         slideNumber: true,
         history: true,
