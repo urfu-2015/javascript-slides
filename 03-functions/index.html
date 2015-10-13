@@ -81,7 +81,7 @@ $ npm install
 
             <section>
                 <h2>Запустить</h2>
-                <h5>Спопоб №1</h5>
+                <h5>Способ №1</h5>
                 <pre class="size-L"><code data-trim>
 $ npm run lint
 # <список ошибок>
@@ -106,7 +106,7 @@ $ npm run lint
 
             <section>
                 <h2>Запустить</h2>
-                <h5>Спопоб №2</h5>
+                <h5>Способ №2</h5>
                 <img src="images/webstorm.png" alt="webstorm" />
                 </code></pre>
             </section>
@@ -267,9 +267,9 @@ npm run lint
         <section>
             <h3>Функции</h3>
             <ul>
-                <li>Чтобы не повторять код (DRY)</li>
+                <li>Не повторять код (DRY)</li>
                 <li>Объединить группу действий</li>
-                <li>Повысить читаемость кода</li>
+                <li>Удобнее читать и изменять код</li>
                 <li>Создать область видимости</li>
                 <li>Рекурсивный вызов</li>
             </ul>
@@ -627,9 +627,9 @@ add();         // 'function'
         <section>
             <h3>Факториал</h3>
             <pre class="size-S javascript"><code data-trim>
-var factorial = function me(n) {
+var factorial = function inner(n) {
     return (n === 1) ?
-        1 : n * me(n - 1);
+        1 : n * inner(n - 1);
 }
             </code></pre>
             <pre class="size-S javascript fragment"><code data-trim>
@@ -718,7 +718,7 @@ function greet() {
           <h3>Блоки</h3>
           <pre class="size-S javascript"><code data-trim>
 function greet() {
-    {
+    if (true) {
         var text = 'Привет';
     }
 
@@ -778,7 +778,7 @@ void function () {
                 <h3>Блочная область видимости</h3>
                 <pre class="size-XS javascript"><code data-trim>
 function greet() {
-    {
+    if (true) {
         let text = 'Привет';
     }
 
@@ -793,6 +793,24 @@ function greet() {
         <section>
             <h2>Домашнее задание</h2>
         </section>
+
+        <section>
+            <h2>Регламент сдачи</h2>
+        </section>
+
+        <section>
+            <img src="images/homework_deadline.png" alt="deadlines" />
+        </section>
+
+        <section>
+            <h3>Если будет 10 задач:</h3>
+            <ul>
+                <li>&ge; 3 - допуск на зачет</li>
+                <li>&ge; 5 - минус теоретический вопрос</li>
+                <li>&ge; 8 - автомат</li>
+            </ul>
+        </section>
+
     </div>
 </div>
 
