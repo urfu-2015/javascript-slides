@@ -1,0 +1,1368 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>JavaScript, Closure and Hoisting</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="../css/reveal.css">
+    <link rel="stylesheet" href="../css/theme/yandex.css" id="theme">
+    <link rel="stylesheet" href="./user.css">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? '../css/print/pdf.css' : '../css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body class="yandex">
+
+<div class="reveal">
+    <div class="slides" style="height: 960px">
+        <section class="large">
+            <h1>Функции</h1>
+            <h4>Область видимости. Всплытие.<br>Замыкание</h4>
+
+            <p style="text-align: center;">
+                <small><span style="color: red">М</span>ангин Александр</small>
+            </p>
+        </section>
+
+        <section>
+            <h2>Что было в прошлых сериях:</h2>
+            <ul>
+                <li>Типы данных</li>
+                <li>Функции</li>
+                <li>Объекты</li>
+                <li>...</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Сегодня:</h2>
+            <ul>
+                <li>Область видимости</li>
+                <li>Глобальный объект</li>
+                <li>Всплытие</li>
+                <li>Замыкание</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Область видимости</h2>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в обычном ЯП</h4>
+            <pre class="size-L javascript"><code data-trim>
+int x = 10;
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в обычном ЯП</h4>
+            <pre class="size-L javascript"><code data-trim>
+int x = 10;
+print x; // ?!;
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в обычном ЯП</h4>
+            <pre class="size-L javascript"><code data-trim>
+int x = 10;
+print x; // 10;
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в обычном ЯП</h4>
+            <pre class="size-L javascript"><code data-trim>
+print x; // ?!;
+int x = 10;
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в обычном ЯП</h4>
+            <pre class="size-L javascript"><code data-trim>
+print x; // NameError: name 'x'
+         // is not defined;
+int x = 10;
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Область видимости в обычном ЯП</h4>
+            <pre class="size-L javascript"><code data-trim>
+if (true) {
+    int answer = 2 + 2;
+}
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в обычном ЯП</h4>
+            <pre class="size-L javascript"><code data-trim>
+if (true) {
+    int answer = 2 + 2;
+}
+// ?!
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в обычном ЯП</h4>
+            <pre class="size-L javascript"><code data-trim>
+if (true) {
+    int answer = 2 + 2;
+}
+// NameError: name 'answer'
+// is not defined;
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Круговорот переменных в обычном ЯП</h4>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Переменная 'рождается' в момент объявления</li>
+                <li class="fragment" data-fragment-index="1">А 'умирает' в конце блока</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Область видимости в JS</h2>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var x = 10;
+console.log(x); // ?!
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var x = 10;
+console.log(x); // 10
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+console.log(x); // ?!
+var x = 10;
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+console.log(x); // undefined
+var x = 10;
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+if (true) {
+    var x = 10;
+}
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+console.log(x); // ?!
+if (true) {
+    var x = 10;
+}
+console.log(x); // !?
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+console.log(x); // undefined
+if (true) {
+    var x = 10;
+}
+console.log(x); // 10
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+function getAnswer() {
+    var x = 21;
+
+    return x * 2;
+}
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+console.log(x); // ?!
+
+function getAnswer() {
+    var x = 21;
+
+    return x * 2;
+}
+
+console.log(x); // ?!
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+console.log(x);
+// Uncaught ReferenceError:
+// x is not defined
+function getAnswer() {
+    var x = 21;
+
+    return x*2;
+}
+console.log(x);
+// Uncaught ReferenceError:
+// x is not defined
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Круговорот переменных в JS</h4>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Вызываем функцию/программу(*)</li>
+                <li class="fragment" data-fragment-index="1">Создаем lexical environment(global)</li>
+                <li class="fragment" data-fragment-index="2">Объявляем все переменные в environment(*)</li>
+                <li class="fragment" data-fragment-index="3">Выполняем функцию</li>
+                <li class="fragment" data-fragment-index="4">Что-то делаем</li>
+                <li class="fragment" data-fragment-index="5">Инициализируем переменные</li>
+                <li class="fragment" data-fragment-index="6">Что-то делаем</li>
+                <li class="fragment" data-fragment-index="7">...</li>
+            </ul>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+function sum (a, b) {
+    return a + b;
+}
+
+sum(2, 2); // 4
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+function sum () {
+    var a = arguments[0];
+    var b = arguments[1];
+
+    return a + b;
+}
+
+sum(2, 2); // 4
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // 1
+(function () {  // 2
+    var b = 1;  // 3
+}());           // 4
+var c = 1;      // 5
+(function () {  // 6
+    var d = 1;  // 7
+}());           // 8
+var e = 1;      // 9
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // *
+(function () {  // 2
+    var b = 1;  // 3
+}());           // 4
+var c = 1;      // 5
+(function () {  // 6
+    var d = 1;  // 7
+}());           // 8
+var e = 1;      // 9
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // * a=1;c;e;
+(function () {  // 2
+    var b = 1;  // 3
+}());           // 4
+var c = 1;      // 5
+(function () {  // 6
+    var d = 1;  // 7
+}());           // 8
+var e = 1;      // 9
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // 1
+(function () {  // 2
+    var b = 1;  // *
+}());           // 4
+var c = 1;      // 5
+(function () {  // 6
+    var d = 1;  // 7
+}());           // 8
+var e = 1;      // 9
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // 1
+(function () {  // 2
+    var b = 1;  // * a=1;b=1;c;e;
+}());           // 4
+var c = 1;      // 5
+(function () {  // 6
+    var d = 1;  // 7
+}());           // 8
+var e = 1;      // 9
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // 1
+(function () {  // 2
+    var b = 1;  // 3
+}());           // 4
+var c = 1;      // *
+(function () {  // 6
+    var d = 1;  // 7
+}());           // 8
+var e = 1;      // 9
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // 1
+(function () {  // 2
+    var b = 1;  // 3
+}());           // 4
+var c = 1;      // * a=1;c=1;e;
+(function () {  // 6
+    var d = 1;  // 7
+}());           // 8
+var e = 1;      // 9
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // 1
+(function () {  // 2
+    var b = 1;  // 3
+}());           // 4
+var c = 1;      // 5
+(function () {  // 6
+    var d = 1;  // *
+}());           // 8
+var e = 1;      // 9
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // 1
+(function () {  // 2
+    var b = 1;  // 3
+}());           // 4
+var c = 1;      // 5
+(function () {  // 6
+    var d = 1;  // * a=1;c=1;e;d=1;
+}());           // 8
+var e = 1;      // 9
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // 1
+(function () {  // 2
+    var b = 1;  // 3
+}());           // 4
+var c = 1;      // 5
+(function () {  // 6
+    var d = 1;  // 7
+}());           // 8
+var e = 1;      // *
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;      // 1
+(function () {  // 2
+    var b = 1;  // 3
+}());           // 4
+var c = 1;      // 5
+(function () {  // 6
+    var d = 1;  // 7
+}());           // 8
+var e = 1;      // * a=1;c=1;e=1;
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>lexical environment</h4>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Список переменных и их значений</li>
+                <li class="fragment" data-fragment-index="1">Ссылка на родительский environment</li>
+            </ul>
+        </section>
+
+        <section class="no-transition">
+            <h4>lexical environment</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;               // 1
+(function root() {       // 2
+    var b = 2;           // 3
+    (function child() {  // 4
+        var c = 3;       // 5
+    }());                // 6
+}());                    // 7
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Поиск значения в переменной(*)</h4>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Берем текущий environment</li>
+                <li class="fragment" data-fragment-index="1">Ищем значение переменной в нем</li>
+                <li class="fragment" data-fragment-index="2">Если нашли => возвращаем значение</li>
+                <li class="fragment" data-fragment-index="3">Если не нашли => берем родительский environment</li>
+                <li class="fragment" data-fragment-index="4">Идем на первый шаг</li>
+            </ul>
+        </section>
+
+        <section class="no-transition">
+            <h4>Область видимости в JS</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 1;               // 1
+(function root() {       // 2
+    var b = 2;           // 3
+    (function child() {  // 4
+        var c = 3;       // 5
+    }());                // 6
+}());                    // 7
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Глобальный объект</h2>
+        </section>
+
+        <section>
+            <h4>Глобальный объект в nodejs</h4>
+<pre class="size-L javascript fragment" data-fragment-index="0"><code data-trim>
+global
+</code></pre>
+        </section>
+
+        <section>
+            <h4>Глобальный объект в nodejs</h4>
+<pre class="size-L javascript"><code data-trim>
+require('index.js');
+Math.abs(-1);
+</code></pre>
+<pre class="size-L javascript fragment" data-fragment-index="0"><code data-trim>
+global.require('index.js');
+global.Math(-1);
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Глобальный объект в nodejs</h4>
+<pre class="size-L javascript"><code data-trim>
+var key = 42;
+console.log(global.key); // ?!
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Глобальный объект в nodejs</h4>
+<pre class="size-L javascript"><code data-trim>
+var key = 42;
+console.log(global.key);
+// undefined
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Глобальный объект в nodejs</h4>
+<pre class="size-L javascript"><code data-trim>
+key = 42;
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Глобальный объект в nodejs</h4>
+<pre class="size-L javascript"><code data-trim>
+key = 42;
+console.log(global.key); // !?
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Глобальный объект в nodejs</h4>
+<pre class="size-L javascript"><code data-trim>
+key = 42;
+console.log(global.key); // 42
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Глобальный объект в nodejs</h4>
+<pre class="size-L javascript"><code data-trim>
+key = 42;
+// global.key = 42;
+</code></pre>
+        </section>
+
+        <section>
+            <h4>Глобальный объект в браузере</h4>
+<pre class="size-L javascript fragment" data-fragment-index="0"><code data-trim>
+window
+</code></pre>
+        </section>
+
+        <section>
+            <h4>Глобальный объект в браузере</h4>
+<pre class="size-L javascript"><code data-trim>
+var x = 1;
+y = 2;
+
+console.log(window.x); // !?
+console.log(window.y); // !?
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Глобальный объект в браузере</h4>
+<pre class="size-L javascript "><code data-trim>
+var x = 1;
+y = 2;
+
+console.log(window.x); // 1
+console.log(window.y); // 2
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Глобальный объект в браузере</h4>
+<pre class="size-L javascript"><code data-trim>
+var x = 1;
+y = 2;
+// window.y = 2
+</code></pre>
+        </section>
+
+        <section>
+            <h4>Глобальный объект в браузере</h4>
+<pre class="size-L javascript"><code data-trim>
+function createPi() {
+    PI = 3.14;
+    var twoPI = PI * 2;
+}
+console.log(window.PI); //!?
+console.log(window.twoPI); //!?
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Глобальный объект в браузере</h4>
+<pre class="size-L javascript"><code data-trim>
+function createPi() {
+    PI = 3.14;
+    var twoPI = PI * 2;
+}
+console.log(window.PI);
+console.log(window.twoPI);
+// 3.14
+// undefined
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Глобальный объект в браузере</h4>
+<pre class="size-L javascript"><code data-trim>
+function createPi() {
+    PI = 3.14;
+    // window.PI = 3.14;
+    var twoPI = PI * 2;
+}
+console.log(window.PI);
+console.log(window.twoPI);
+// 3.14
+// undefined
+</code></pre>
+        </section>
+
+        <section>
+            <h2>Оператор delete</h2>
+<pre class="size-L javascript"><code data-trim>
+var student = {
+    name: 'Alex',
+    isStudy: true
+};
+
+delete student.isStudy;
+console.log(student); // ?!
+</code></pre>
+        </section>
+
+        <section>
+            <h2>Оператор delete</h2>
+<pre class="size-L javascript"><code data-trim>
+{
+    name: 'Alex'
+}
+</code></pre>
+        </section>
+
+        <section>
+            <h2>Оператор delete</h2>
+<pre class="size-L javascript"><code data-trim>
+var a = ['a', 'b', 'c'];
+var b = ['c', 'b', 'd'];
+
+var map = {};
+for(var i = 0; i < a.length; i++ ) {
+    map[a[i]] = true;
+}
+
+for(var i = 0; i < b.length; i++ ) {
+    delete map[b[i]];
+}
+</code></pre>
+        </section>
+
+        <section>
+            <h2>Оператор delete</h2>
+<pre class="size-L javascript"><code data-trim>
+var x = 1;
+y = 2;
+
+delete x;
+delete y;
+
+
+console.log(x); // ?!
+console.log(y); // ?!
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Оператор delete</h2>
+<pre class="size-L javascript"><code data-trim>
+var x = 1;
+y = 2;
+
+delete x;
+delete y;
+
+
+console.log(x); // 1
+console.log(y); // undefined
+</code></pre>
+        </section>
+
+        <section  class="no-transition">
+            <h2>Оператор delete</h2>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Удаляет свойство из объекта;</li>
+                <li class="fragment" data-fragment-index="1">Если передали переменную,то ничего не удаляем</li>
+                <li class="fragment" data-fragment-index="2">Если передали свойство глобального объекта, то удаляем</li>
+            </ul>
+        </section>
+
+        <section>
+            <h4>Поиск значения в переменной(*)</h4>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Берем текущий environment</li>
+                <li class="fragment" data-fragment-index="5">Если (environment === null) => ищем в глобальном объекте</li>
+                <li class="fragment" data-fragment-index="1">Ищем значение переменной в нем</li>
+                <li class="fragment" data-fragment-index="2">Если нашли => возвращаем значение</li>
+                <li class="fragment" data-fragment-index="3">Если не нашли => берем родительский environment</li>
+                <li class="fragment" data-fragment-index="4">Идем на первый шаг</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Всплытие переменных(Hoisting)</h2>
+        </section>
+
+        <section>
+            <h4>Круговорот переменных в JS</h4>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Вызываем функцию/программу(*)</li>
+                <li class="fragment" data-fragment-index="0">Создаем lexical environment(global)</li>
+                <li class="fragment" data-fragment-index="1" style="color: red">Объявляем все переменные в environment(*)</li>
+                <li class="fragment" data-fragment-index="0">Выполняем функцию</li>
+                <li class="fragment" data-fragment-index="0">Что-то делаем</li>
+                <li class="fragment" data-fragment-index="0">Инициализируем переменные</li>
+                <li class="fragment" data-fragment-index="0">Что-то делаем</li>
+                <li class="fragment" data-fragment-index="0">...</li>
+            </ul>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+
+function calculateAnswer () {
+    var text = 'title';
+    var result = text + ':' + 42;
+}
+
+var result = calculateAnswer();
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var result;
+
+function calculateAnswer () {
+    var text;
+    var result;
+
+    text = 'title';
+    result = text + ':' + 42;
+}
+
+result = calculateAnswer();
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var input = 42;
+
+if (input === 42) {
+  var result = 'Ты прав!';
+} else {
+  var result = 'Ты заблуждаешься!';
+}
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var result, input;
+
+input = 42;
+
+if (input === 42) {
+  result = 'Ты прав!';
+} else {
+  result = 'Ты заблуждаешься!';
+}
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+
+var f = function () {
+    console.log(1);
+}
+function f () {
+    console.log(2);
+}
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+function f () {
+    console.log(1);
+}
+
+f = function () {
+    console.log(2);
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+if (...) {
+    function f() {
+        console.log(1);
+    }
+} else {
+    function f() {
+        console.log(2);
+    }
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+function f() {
+    console.log(2);
+}
+
+if (...) {
+   // empty
+} else {
+   // empty
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+if (...) {
+    var f = function () {
+        console.log(1);
+    }
+} else {
+    var f = function () {
+        console.log(2);
+    }
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var f;
+
+if (...) {
+    f = function () {
+        console.log(1);
+    }
+} else {
+    f = function () {
+        console.log(2);
+    }
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var squareFuncs = [];
+
+for(var i=0; i < 10; i++) {
+    squareFuncs.push(function () {
+        return i*i;
+    });
+}
+
+for(var i=0; i < 10; i++) {
+    squareFuncs[i]();
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var squareFuncs = [];
+
+for(var i=0; i < 10; i++) {
+    var square = i*i;
+    squareFuncs.push(function () {
+        return square;
+    });
+}
+
+for(var j=0; j < 10; j++) {
+    squareFuncs[i](); // ?!
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var squareFuncs = [];
+
+for(var i=0; i < 10; i++) {
+    var square = i*i;
+    squareFuncs.push(function () {
+        return square;
+    });
+}
+
+for(var j=0; j < 10; j++) {
+    squareFuncs[i](); // 100 * 10
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var squareFunc, i, j, square;
+squareFunc = [];
+for(i=0; i < 10; i++) {
+    square = i*i;
+    squareFunc.push(function () {
+        return square;
+    });
+}
+for(j=0; j < 10; j++) {
+    squareFunc[i]();
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var squareFunc = [];
+
+for(var i=0; i < 10; i++) {
+  (function (i) {
+    squareFunc.push(function () {
+      return i*i;
+    });
+  }(i));
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var squareFunc, i;
+
+squareFunc = [];
+
+for(var i=0; i < 10; i++) {
+  (function (i) {
+    squareFunc.push(function () {
+      return i*i;
+    });
+  }(i));
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+var squareFunc, i, j;
+
+squareFunc = [];
+function createFunc(i) {
+    return function () {
+        return i*i;
+    }
+}
+for(var j=0; j < 10; j++) {
+    squareFunc.push(createFunc(j));
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Всплытие</h2>
+<pre class="size-L javascript"><code data-trim>
+for(let i=0; i < 10; i++) {
+    squareFunc.push(function () {
+        return i*i;
+    });
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h2>Замыкания</h2>
+        </section>
+
+        <section>
+            <h4>Круговорот переменных в JS</h4>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Вызываем функцию/программу(*)</li>
+                <li class="fragment" data-fragment-index="1" style="color: red">Создаем lexical environment(global)</li>
+                <li class="fragment" data-fragment-index="1" style="color: red">Объявляем все переменные в environment(*)</li>
+                <li class="fragment" data-fragment-index="0">Выполняем функцию</li>
+                <li class="fragment" data-fragment-index="0">Что-то делаем</li>
+                <li class="fragment" data-fragment-index="0">Инициализируем переменные</li>
+                <li class="fragment" data-fragment-index="0">Что-то делаем</li>
+                <li class="fragment" data-fragment-index="0">...</li>
+            </ul>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания</h4>
+<pre class="size-L javascript"><code data-trim>
+var a = 3;
+var b = 2;
+
+function sum () {
+    return a + b;
+}
+
+sum(); // ?!
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания</h4>
+<pre class="size-L javascript"><code data-trim>
+var a = 3;
+var b = 2;
+
+function sum () {
+    return a + b;
+}
+
+sum(); // 5
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания</h4>
+<pre class="size-L javascript"><code data-trim>
+var a = 3;
+var b = 2;
+
+function sum () {
+    return a + b;
+}
+
+a = 10;
+sum(); // ?!
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания</h4>
+<pre class="size-L javascript"><code data-trim>
+var a = 3;
+var b = 2;
+
+function sum () {
+    return a + b;
+}
+
+a = 10;
+sum(); // 12
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания</h4>
+<pre class="size-L javascript"><code data-trim>
+function partialSum (a) {
+    return function (b) {
+        return a + b;
+    };
+}
+
+var sum2 = partialSum(2);
+sum2(2); // ?!
+sum2(40); // ?!
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания</h4>
+<pre class="size-L javascript"><code data-trim>
+function partialSum (a) {
+    return function (b) {
+        return a + b;
+    };
+}
+
+var sum2 = partialSum(2);
+sum2(2);  // 4
+sum2(40); // 42
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания</h4>
+<pre class="size-L javascript"><code data-trim>
+var cacheSum;
+function partialSum (a) {
+    cacheSum = function (b) {
+        return a + b;
+    };
+}
+
+partialSum(2);
+cacheSum(2);  // 4
+cacheSum(40); // 42
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания: Сохранение контекста</h4>
+<pre class="size-L javascript"><code data-trim>
+var angle = createAngle360(90);
+
+angle.add(180);
+angle.getAngle(); // 270;
+angle.add(180);
+angle.getAngle(); // 90
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания: Сохранение контекста</h4>
+<pre class="size-L javascript"><code data-trim>
+function createAngle360(value) {
+  return  {
+    add: function (dt) {
+      var angle = value + dt;
+      value = angle % 360;
+    },
+    getAngle: function () {
+      return value;
+    }
+  };
+}
+</code></pre>
+        </section>
+        <section class="no-transition">
+            <h4>Замыкания: Инкапсуляция</h4>
+<pre class="size-L javascript"><code data-trim>
+var a = 2;
+var b = 2;
+
+var result = a + b;
+
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания: Инкапсуляция</h4>
+<pre class="size-L javascript"><code data-trim>
+a; // ?!
+(function () {
+    var a = 1;
+}());
+a; // ?!
+(function () {
+    var a = 2;
+}());
+a; // ?!
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания: Инкапсуляция</h4>
+<pre class="size-L javascript"><code data-trim>
+a; // error
+(function () {
+    var a = 1;
+}());
+a; // error
+(function () {
+    var a = 2;
+}());
+a; // error
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Паттерн модуль</h4>
+<pre class="size-L javascript"><code data-trim>
+(function () {
+    // ваш код
+}());
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания: Создание новых функций</h4>
+<pre class="size-L javascript"><code data-trim>
+var doubleSum = doubleResult(function (a, b) {
+    return a + b;
+});
+
+doubleSum(2, 5); // 14
+doubleSum('a', 'b'); // 'abab'
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания: Создание новых функций</h4>
+<pre class="size-L javascript"><code data-trim>
+function doubleResult(f) {
+    return function () {
+        var result = f.apply(null, arguments);
+        return result + result
+    };
+}
+</code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания: когда нужно</h4>
+            <ul>
+                <li>Инкапсуляция</li>
+                <li>Сохранение контекста</li>
+                <li>Создание новых функций</li>
+            </ul>
+        </section>
+
+        <section class="no-transition">
+            <h4>Замыкания: Темная сторона</h4>
+            <pre class="size-L javascript"><code data-trim>
+var a = 2;
+var b = 2;
+
+// 100500 строк кода
+
+function sum() {
+   return a + b;
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Итого:</h4>
+            <ul>
+                <li>Область видимости</li>
+                <li>Глобальный объект</li>
+                <li>Всплытие(Hoisting)</li>
+                <li>Замыкание</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Домашнее задание</h2>
+        </section>
+
+    </div>
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.js"></script>
+
+<script>
+
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        height: 960,
+        width: 1300,
+        controls: true,
+        progress: true,
+        slideNumber: true,
+        history: true,
+        center: false,
+        hideAddressBar: true,
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+            {
+                src: '../lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            }
+            },
+            {
+                src: '../plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: '../plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: '../plugin/highlight/highlight.js', async: true, condition: function () {
+                return !!document.querySelector('pre code');
+            }, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            },
+//            { src: '../plugin/zoom-js/zoom.js', async: true },
+            { src: '../plugin/notes/notes.js', async: true }
+        ]
+    });
+
+</script>
+
+</body>
+</html>

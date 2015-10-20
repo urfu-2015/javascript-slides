@@ -1,0 +1,7 @@
+.reveal pre code {
+    max-height: 960px;
+}
+
+.reveal pre {
+    width: 95%;
+}
