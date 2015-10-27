@@ -1,0 +1,1179 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>JavaScript, This</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="../css/reveal.css">
+    <link rel="stylesheet" href="../css/theme/yandex.css" id="theme">
+    <link rel="stylesheet" href="./css/user.css">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? '../css/print/pdf.css' : '../css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body class="yandex">
+
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h3>Про это...</h3>
+        </section>
+
+        <section class="large">
+            <h1>this</h1>
+            <h4>Контекст исполнения.<br>call. apply. bind.</h4>
+
+            <p style="text-align: center;">
+                <small><span style="color: red">Ж</span>игалов Сергей</small>
+            </p>
+        </section>
+
+        <section>
+            <section>
+                <h3>Git + WebStorm = &#9825;</h3>
+            </section>
+
+            <section data-background="images/01_upstream.jpg"></section>
+
+            <section data-background="images/02_fork.jpg"></section>
+
+            <section data-background-video="images/03_clone_repo.webm"></section>
+
+            <section data-background="#fff">
+                <img src="images/fork.png" alt="fork" />
+            </section>
+
+            <section data-background-video="images/04_update_in_upstream.webm"></section>
+
+            <section data-background="#fff">
+                <img src="images/fork.png" alt="fork" />
+            </section>
+
+            <section data-background-video="images/05_local_changes.webm"></section>
+
+            <section data-background="#fff">
+                <img src="images/06_fork.jpg" alt="fork" />
+            </section>
+
+            <section data-background="#fff">
+                <img src="images/fork.png" alt="fork" />
+            </section>
+
+            <section data-background-video="images/07_rebase.webm"></section>
+
+            <section data-background="#fff">
+                <img src="images/fork.png" alt="fork" />
+            </section>
+
+            <section data-background-video="images/08_force_push.webm"></section>
+
+            <section data-background="images/09_result.jpg"></section>
+
+            <section data-background="images/09_result_2.jpg"></section>
+
+            <section>
+                <h2>Итого</h2>
+            </section>
+
+            <section data-background="#fff">
+                <img src="images/fork.png" alt="fork" />
+            </section>
+        </section>
+
+        <section>
+            <h3>вернемся к THIS</h3>
+        </section>
+
+        <section>
+            <section>
+                <h2>C++</h2>
+            </section>
+
+            <section>
+                <h4>C++</h4>
+                <pre class="size-S cpp"><code data-trim>
+class User {
+private:
+    int age=30;
+public:
+    void showAge() {
+        std::cout << this->age;
+    };
+};
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>C++</h4>
+                <pre class="size-S cpp"><code data-trim>
+int main() {
+    User* sergey = new User;
+
+    sergey->showAge();
+}
+                </code></pre>
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h2>Java</h2>
+            </section>
+
+            <section>
+                <h4>Java</h4>
+                <pre class="size-S java"><code data-trim>
+public class User {
+    private int age = 30;
+
+    public void showAge() {
+       System.out.println(this.age);
+    }
+}
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Java</h4>
+                <pre class="size-S java"><code data-trim>
+public static void
+    main(String []args) {
+    User sergey = new User();
+
+    sergey.showAge();
+}
+                </code></pre>
+            </section>
+        </section>
+
+        <section>
+            <h3>Свойства this</h3>
+            <ul>
+                <li>является ключевым словом языка</li>
+                <li>указывает на текущий объект</li>
+                <li>нельзя перезаписать</li>
+            </ul>
+        </section>
+
+        <section>
+            <section>
+                <h2>JavaScript</h2>
+            </section>
+
+            <section>
+                <h4>JavaScript</h4>
+                <pre class="size-S javascript"><code data-trim>
+function User () {
+    return {
+        age: 30,
+        showAge: function () {
+            console.log(this.age);
+        }
+    }
+}
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>JavaScript</h4>
+                <pre class="size-S javascript"><code data-trim>
+var sergey = new User();
+
+sergey.showAge();
+                </code></pre>
+            </section>
+        </section>
+
+        <section>
+            <h3>Свойства this в JS</h3>
+            <ul>
+                <li class="gray">является ключевым словом языка</li>
+                <li class="gray">указывает на текущий объект</li>
+                <li class="gray">нельзя перезаписать</li>
+                <li class="fragment grow">использовать this за пределами объектов</li>
+            </ul>
+        </section>
+
+        <section>
+            <h4>В браузере</h4>
+            <pre class="size-S javascript"><code data-trim>
+console.log(this.innerWidth); //1684
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>В Node.js</h4>
+            <pre class="size-S javascript"><code data-trim>
+this.process.version; // 'v0.12.7'
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Контекст исполнения</h2>
+        </section>
+
+        <section>
+            <pre class="size-S javascript"><code data-trim>
+function add(a, b) {
+    return a + b;
+}
+
+var sum = add(4, 2);
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <div class='column'>
+                <h4>Код</h4>
+                <pre class="size-XS javascript">
+function add(a, b) {
+    return a + b;
+}
+
+var sum = add(4, 2);
+                </pre>
+            </div>
+
+            <div  class='column'>
+                <h4>Контекст</h4>
+                <pre class="size-XS javascript">
+globalContext = {
+  lexicalEnv: {
+  }
+};
+                </pre>
+            </div>
+        </section>
+
+        <section class="no-transition">
+            <div class='column'>
+                <h4>Код</h4>
+                <pre class="size-XS javascript">
+function add(a, b) {
+    return a + b;
+}
+
+<mark>var sum</mark> = add(4, 2);
+                </pre>
+            </div>
+
+            <div  class='column'>
+                <h4>Контекст</h4>
+                <pre class="size-XS javascript">
+globalContext = {
+  lexicalEnv: {
+    <mark>sum: undefined</mark>
+  }
+};
+                </pre>
+            </div>
+        </section>
+
+        <section class="no-transition">
+            <div class='column'>
+                <h4>Код</h4>
+                <pre class="size-XS javascript">
+<mark>function add</mark>(a, b) {
+    return a + b;
+}
+
+var sum = add(4, 2);
+                </pre>
+            </div>
+
+            <div  class='column'>
+                <h4>Контекст</h4>
+                <pre class="size-XS javascript">
+globalContext = {
+  lexicalEnv: {
+    sum: undefined,
+    <mark>add: <ссылка на add></mark>
+  }
+};
+                </pre>
+            </div>
+        </section>
+
+        <section class="no-transition">
+            <div class='column'>
+                <h4>Код</h4>
+                <pre class="size-XS javascript">
+<mark>function add(a, b) {
+    return a + b;
+}</mark>
+
+var sum = add(4, 2);
+                </pre>
+            </div>
+
+            <div  class='column'>
+                <h4>Контекст</h4>
+                <pre class="size-XS javascript">
+functionContext = {
+    lexicalEnv: {
+    },
+    parentEnv:
+globalContext.lexicalEnv
+};
+                </pre>
+            </div>
+        </section>
+
+        <section class="no-transition">
+            <div class='column'>
+                <h4>Код</h4>
+                <pre class="size-XS javascript">
+function add(<mark>a, b</mark>) {
+    return a + b;
+}
+
+var sum = add(4, 2);
+                </pre>
+            </div>
+
+            <div  class='column'>
+                <h4>Контекст</h4>
+                <pre class="size-XS javascript">
+functionContext = {
+    lexicalEnv: {
+        <mark>a: 4,</mark>
+        <mark>b: 2</mark>
+    },
+    parentEnv:
+globalContext.lexicalEnv
+};
+                </pre>
+            </div>
+        </section>
+
+        <section class="no-transition">
+            <div class='column'>
+                <h4>Код</h4>
+                <pre class="size-XS javascript">
+function add(a, b) {
+    return a + b;
+}
+
+var sum = add(4, 2);
+                </pre>
+            </div>
+
+            <div  class='column'>
+                <h4>Контекст</h4>
+                <pre class="size-XS javascript">
+functionContext = {
+    lexicalEnv: {
+        a: 4,
+        b: 2
+    },
+    parentEnv:
+globalContext.lexicalEnv,
+    <mark>this:
+<ссылка на объект></mark>
+};
+                </pre>
+            </div>
+        </section>
+
+        <section>
+            <h4>This зависит от</h4>
+            <ol>
+                <li class="fragment grow">режима работы интерпретатора</li>
+                <li>как мы попали на участок кода</li>
+                <li>типа участка кода</li>
+            </ol>
+        </section>
+
+        <section>
+            <h3>В обычном режиме</h3>
+            <pre class="size-S javascript"><code data-trim>
+function func() {
+    return this;
+}
+            </code></pre>
+            <pre class="size-S javascript fragment"><code data-trim>
+func(); // window
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>В строгом режиме</h3>
+            <pre class="size-S javascript"><code data-trim>
+function strictFunc() {
+    'use strict';
+
+    return this;
+}
+            </code></pre>
+            <pre class="size-S javascript fragment"><code data-trim>
+strictFunc(); // undefined
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>This зависит от</h4>
+            <ol>
+                <li>режима работы интерпретатора</li>
+                <li class="fragment grow">как мы попали на участок кода</li>
+                <li >типа участка кода</li>
+            </ol>
+        </section>
+
+        <section>
+            <h3>1. Метод объекта</h3>
+            <pre class="size-S javascript"><code data-trim>
+var sergey = {
+    age: 30,
+
+    getAge: function () {
+        'use strict';
+        return this.age;
+    }
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>1. Метод объекта</h3>
+            <pre class="size-S javascript"><code data-trim>
+sergey.getAge(); // 30
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>2. Заимствованный метод</h3>
+            <pre class="size-S javascript"><code data-trim>
+var sergey = {
+    age: 30,
+
+    getAge: function () {
+        'use strict';
+        return this.age;
+    }
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>2. Заимствованный метод</h3>
+            <pre class="size-S javascript"><code data-trim>
+var getAge = sergey.getAge;
+
+getAge();
+// TypeError:
+//     Cannot read property
+//     'age' of undefined
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>2. Заимствованный метод</h3>
+            <pre class="size-S javascript"><code data-trim>
+var block = {
+    innerHeight: 300,
+
+    getHeight: function () {
+        return this.innerHeight;
+    }
+}
+            </code></pre>
+
+            <pre class="size-S javascript fragment"><code data-trim>
+var getHeight = block.getHeight;
+
+getHeight(); // ?
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>2. Заимствованный метод</h3>
+            <pre class="size-S javascript"><code data-trim>
+var block = {
+    innerHeight: 300,
+
+    getHeight: function () {
+        return this.innerHeight;
+    }
+}
+            </code></pre>
+
+            <pre class="size-S javascript"><code data-trim>
+var getHeight = block.getHeight;
+
+getHeight(); // 1274
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>3. call</h2>
+        </section>
+
+        <section>
+            <pre class="size-S javascript"><code data-trim>
+var sergey = {
+    age: 30,
+
+    getAge: function () {
+        'use strict';
+        return this.age;
+    }
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <pre class="size-L javascript"><code data-trim>
+var oleg = {
+    age: 23
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>3. call</h3>
+            <pre class="size-S javascript"><code data-trim>
+func.call(thisArg, arg1, arg2, ...);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>3. call</h3>
+            <pre class="size-S javascript"><code data-trim>
+// Заимствуем метод
+var getAge = sergey.getAge;
+
+// Безопасно вызываем от лица Олега
+getAge.call(oleg); // 23
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>3. call</h3>
+            <pre class="size-XS javascript"><code data-trim>
+function func() {
+    var args =
+        [].slice.call(arguments);
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>4. apply</h2>
+        </section>
+
+        <section>
+            <h3>4. apply</h3>
+            <pre class="size-S javascript"><code data-trim>
+func.apply(thisArg, [arg1, ...]);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>4. apply</h3>
+            <pre class="size-S javascript"><code data-trim>
+var fruits = [];
+
+// Добавляем по одному
+fruits.push('Banana');
+
+// Сразу пачкой
+fruits.push('Orange', 'Lemon');
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>4. apply</h3>
+            <pre class="size-S javascript"><code data-trim>
+var fruits = [];
+var citrus = ['Orange', 'Lemon'];
+            </code></pre>
+            <pre class="size-S javascript fragment"><code data-trim>
+// Добавляем по одному
+fruits.push('Banana');
+
+// Сразу массивом
+fruits.push.apply(fruits, citrus);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>4. apply</h3>
+            <pre class="size-S javascript"><code data-trim>
+Math.min(3, 5, 2, 6);        // 2
+
+var numbers = [3, 5, 2, 6];
+Math.min(numbers);           // NaN
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>4. apply</h3>
+            <pre class="size-S javascript"><code data-trim>
+var numbers = [3, 5, 2, 6];
+Math.min.apply(null, numbers); // 2
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>5. callback</h2>
+        </section>
+
+        <section>
+            <h4>5. callback</h4>
+            <pre class=" javascript"><code data-trim>
+'use strict';
+
+var person = {
+    name: 'Sergey',
+    showItems: function () {
+        var cb = function (item) {
+           console.log(this.name + ' have ' + item);
+        };
+        ['keys', 'phone'].forEach(cb);
+    }
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>5. callback</h4>
+            <pre class="size-S javascript"><code data-trim>
+person.showItems(); // TypeError:
+    // Cannot read property
+    // 'name' of undefined
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Способ 1</h2>
+            <h4>сохранение this в лексическом окружении</h4>
+        </section>
+
+        <section>
+            <h4>5. callback</h4>
+            <pre class=" javascript"><code data-trim>
+'use strict';
+
+var person = {
+    name: 'Sergey',
+    showItems: function () {
+        var _this = this;
+        var cb = function (item) {
+           console.log(_this.name + ' have ' + item);
+        };
+        ['keys', 'phone'].forEach(cb);
+    }
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>5. callback</h4>
+            <pre class="size-S javascript"><code data-trim>
+person.showItems();
+    // Sergey have keys
+    // Sergey have phone
+            </code></pre>
+        </section>
+
+        <section class="no-transition">
+            <h3>Под капотом</h3>
+            <div class='column'>
+                <h4>Код</h4>
+                <pre class="size-XXS javascript">
+'use strict';
+
+var person = {
+  name: 'Sergey',
+  showItems: <mark>function</mark> () {
+    var _this = this;
+    var cb = function (item) {
+      console.log(_this.name +
+        ' have ' + item);
+      };
+      ['keys', 'phone']
+        .forEach(cb);
+  }
+}
+                </pre>
+            </div>
+
+            <div  class='column'>
+                <h4>Контекст</h4>
+                <pre class="size-XXS javascript">
+<mark>showItemsContext</mark> = {
+  lexicalEnv: {
+    _this: undefined
+  },
+  parentLexicalEnv:
+    globalContext.lexicalEnv,
+  this: Ссылка на `person`
+};
+                </pre>
+            </div>
+        </section>
+
+        <section class="no-transition">
+            <h3>Под капотом</h3>
+            <div class='column'>
+                <h4>Код</h4>
+                <pre class="size-XXS javascript">
+'use strict';
+
+var person = {
+  name: 'Sergey',
+  showItems: function () {
+    <mark>var _this = this;</mark>
+    var cb = function (item) {
+      console.log(_this.name +
+        ' have ' + item);
+      };
+      ['keys', 'phone']
+        .forEach(cb);
+  }
+}
+                </pre>
+            </div>
+
+            <div  class='column'>
+                <h4>Контекст</h4>
+                <pre class="size-XXS javascript">
+showItemsContext = {
+  lexicalEnv: {
+    <mark>_this: Ссылка на `person`</mark>
+  },
+  parentLexicalEnv:
+    globalContext.lexicalEnv,
+  this: Ссылка на `person`
+};
+                </pre>
+            </div>
+        </section>
+
+        <section class="no-transition">
+            <h3>Под капотом</h3>
+            <div class='column'>
+                <h4>Код</h4>
+                <pre class="size-XXS javascript">
+'use strict';
+
+var person = {
+  name: 'Sergey',
+  showItems: function () {
+    var _this = this;
+    var cb = function (item) {
+      console.log(_this.name +
+        ' have ' + item);
+      };
+      ['keys', 'phone']
+        .forEach(<mark>cb</mark>);
+  }
+}
+                </pre>
+            </div>
+
+            <div  class='column'>
+                <h4>Контекст</h4>
+                <pre class="size-XXS javascript">
+<mark>callbackContext</mark> = {
+  lexicalEnv: {
+    item: 'keys'
+  },
+  parentLexicalEnv:
+    showItemsContext.lexicalEnv,
+  this: undefined
+};
+                </pre>
+            </div>
+        </section>
+
+        <section class="no-transition">
+            <h3>Под капотом</h3>
+            <div class='column'>
+                <h4>Код</h4>
+                <pre class="size-XXS javascript">
+'use strict';
+
+var person = {
+  name: 'Sergey',
+  showItems: function () {
+    var _this = this;
+    var cb = function (item) {
+      console.log(<mark>_this</mark>.name +
+        ' have ' + item);
+      };
+      ['keys', 'phone']
+        .forEach(cb);
+  }
+}
+                </pre>
+            </div>
+
+            <div  class='column'>
+                <h4>Контекст</h4>
+                <pre class="size-XXS javascript">
+callbackContext = {
+  lexicalEnv: {
+    item: 'keys'
+  },
+  parentLexicalEnv:
+    <mark>showItemsContext.lexicalEnv</mark>,
+  this: undefined
+};
+                </pre>
+            </div>
+        </section>
+
+        <section>
+            <section>
+                <h2>ES2015</h2>
+            </section>
+
+            <section>
+                <h3>This в стрелочных функциях</h3>
+            </section>
+
+            <section>
+                <h4>This в стрелочных функциях</h4>
+                <pre class="javascript"><code data-trim>
+'use strict';
+
+var person = {
+    name: 'Sergey',
+    showItems: function () {
+        var cb = item => {
+           console.log(this.name + ' have ' + item);
+        };
+        ['keys', 'phone'].forEach(cb);
+    }
+}
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>This в стрелочных функциях</h4>
+                <pre class="size-S javascript"><code data-trim>
+person.showItems();
+    // Sergey have keys
+    // Sergey have phone
+            </code></pre>
+            </section>
+        </section>
+
+        <section>
+            <h2>Способ 2</h2>
+            <h4>передача this в качестве аргумента</h4>
+        </section>
+
+        <section>
+            <h4>Через аргумент</h4>
+            <pre class=" javascript"><code data-trim>
+'use strict';
+
+var person = {
+  name: 'Sergey',
+  showItems: function () {
+    var cb = function (item) {
+      console.log(this.name + ' have ' + item);
+    };
+    ['keys', 'phone'].forEach(cb, this);
+  }
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Через аргумент</h4>
+            <pre class="size-S javascript"><code data-trim>
+person.showItems();
+    // Sergey have keys
+    // Sergey have phone
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Способ 3</h2>
+            <h4>.bind()</h4>
+        </section>
+
+        <section>
+            <h2>bind</h2>
+            <pre class="size-XS javascript"><code data-trim>
+var bindedFunc = func.bind(thisArg, arg1, ...);
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>bind</h4>
+            <pre class=" javascript"><code data-trim>
+'use strict';
+
+var person = {
+  name: 'Sergey',
+  showItems: function () {
+    var cb = function (item) {
+      console.log(this.name + ' have ' + item);
+    };
+    var bindedCb = cb.bind(this);
+    ['keys', 'phone'].forEach(bindedCb);
+  }
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>bind</h4>
+            <pre class="size-S javascript"><code data-trim>
+person.showItems();
+    // Sergey have keys
+    // Sergey have phone
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>myBind</h4>
+            <pre class="javascript"><code data-trim>
+cb.myBind = function(_this) {
+    var fn = this;
+
+    return function () {
+        var args = [].slice.call(arguments);
+        return fn.apply(_this, args);
+    };
+};
+            </code></pre>
+
+            <pre class="javascript fragment"><code data-trim>
+var bindedCb = cb.myBind(this);
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>6. Конструктор</h2>
+        </section>
+
+        <section>
+            <h3>6. Конструктор</h3>
+            <pre class="size-S javascript"><code data-trim>
+function User (age) {
+    return {
+        age: age,
+        showAge: function () {
+            console.log(this.age);
+        }
+    }
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>6. Конструктор</h3>
+            <pre class="size-S javascript"><code data-trim>
+var sergey = new User(30);
+
+sergey.showAge(); // 30
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>This зависит от</h4>
+            <ol>
+                <li>режима работы интерпретатора</b></li>
+                <li>как мы попали на участок кода</li>
+                <li class="fragment grow">типа участка кода</li>
+            </ol>
+        </section>
+
+        <section>
+            <ul>
+                <li>Global code</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Браузер</h3>
+            <pre class="size-S javascript"><code data-trim>
+this.close();
+            </code></pre>
+            <pre class="size-S javascript fragment"><code data-trim>
+window.close();
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Node.js</h3>
+            <pre class="size-S javascript"><code data-trim>
+this.process.version;
+            </code></pre>
+            <pre class="size-S javascript fragment"><code data-trim>
+global.process.version;
+            </code></pre>
+        </section>
+
+        <section>
+            <ul>
+                <li>Global code</li>
+                <li>Function code</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Function code</h3>
+            <pre class="size-M javascript"><code data-trim>
+function add(a, b) {
+    return a + b;
+}
+
+var sum = add(2, 5);
+            </code></pre>
+        </section>
+
+        <section>
+            <ul>
+                <li>Global code</li>
+                <li>Function code</li>
+                <li>Eval code</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Eval code</h3>
+            <pre class="size-M javascript"><code data-trim>
+var sum = eval('2 + 7');
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Eval code</h2>
+            <pre class="size-S javascript"><code data-trim>
+var person = {
+    name: 'Sergey',
+    showName: function () {
+        return eval('this.name');
+    }
+}
+            </code></pre>
+
+            <pre class="size-S javascript fragment"><code data-trim>
+person.showName(); // Sergey
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Eval code</h2>
+            <pre class="size-S javascript"><code data-trim>
+var person = {
+    name: 'Sergey',
+    showName: function () {
+        var evil = eval;
+        return evil('this.name');
+    }
+}
+            </code></pre>
+
+            <pre class="size-S javascript fragment"><code data-trim>
+person.showName(); // ""
+            </code></pre>
+        </section>
+
+        <section>
+            <ul>
+                <li>Global code</li>
+                <li>Function code</li>
+                <li>Eval code</li>
+                <li>Module code <img src="images/nodejs-logo.png" alt="nodejs logo" style="vertical-align: middle;" width="48"/></li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Module code</h3>
+            <pre class="size-S javascript"><code data-trim>
+// В module.exports кладётся то,
+// что будет торчать наружу
+module.exports.weeks = 54;
+module.exports.days = 366;
+            </code></pre>
+            <pre class="size-S javascript fragment"><code data-trim>
+// Так как this это module.exports,
+// мы можем писать так:
+this.isLeap = true;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Домашечка</h3>
+        </section>
+    </div>
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.js"></script>
+
+<script>
+
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        slideNumber: true,
+        history: true,
+        center: true,
+        hideAddressBar: true,
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+            {
+                src: '../lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            }
+            },
+            {
+                src: '../plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: '../plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: '../plugin/highlight/highlight.js', async: true, condition: function () {
+                return !!document.querySelector('pre code');
+            }, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            },
+            { src: '../plugin/zoom-js/zoom.js', async: true },
+            { src: '../plugin/notes/notes.js', async: true }
+        ]
+    });
+
+</script>
+
+</body>
+</html>

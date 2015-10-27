@@ -1,0 +1,26 @@
+section .gray {
+    color: #888;
+}
+
+section .strike {
+    text-decoration: line-through;
+}
+
+.column {
+    display:inline-block;
+    width: 49%;
+    vertical-align: top !important;
+}
+.column pre{
+    font-family: monospace;
+    background: #3F3F3F;
+    padding: 5px;
+    margin: 0 !important;
+    width: auto !important;
+}
+
+section.size-XXS,
+section .size-XXS,
+pre.size-XXS {
+    font-size: 23px;
+}
