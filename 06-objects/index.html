@@ -1,0 +1,1108 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>JavaScript, Object and Array</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="../css/reveal.css">
+    <link rel="stylesheet" href="../css/theme/yandex.css" id="theme">
+    <link rel="stylesheet" href="./css/user.css">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? '../css/print/pdf.css' : '../css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body class="yandex">
+
+<div class="reveal">
+    <div class="slides">
+        <section class="large">
+            <h1>Объекты</h1>
+            <h4>Объекты. Свойства. Объекты среды.</h4>
+
+            <p style="text-align: center;">
+                <small><span style="color: red">М</span>ангин Александр</small>
+            </p>
+        </section>
+        <section>
+            <h3>В прошлых сериях.</h3>
+            <h4>Мы поговорили про это..</h4>
+        </section>
+        <section>
+            <h3>Введение</h3>
+        </section>
+
+        <section>
+            <h3>Java Script - это...</h3>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Императивный ЯП</li>
+                <li class="fragment" data-fragment-index="1">Функциональный ЯП</li>
+                <li class="fragment" data-fragment-index="2">Объектный ЯП</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Java</h3>
+            <h4 class="fragment" data-fragment-index="1">Все объект!</h4>
+        </section>
+
+        <section>
+            <h3>JavaScript</h3>
+            <h4 style="display: inline-block">Все объект!</h4>
+            <h4 class="fragment" data-fragment-index="1" style="display: inline-block">... почти все</h4>
+        </section>
+
+        <section>
+            <h3>Типы данных</h3>
+            <ul class="fragment" data-fragment-index="0">
+                <li>Число</li>
+                <li>Строка</li>
+                <li>Null</li>
+                <li>Undefined</li>
+                <li>Boolean</li>
+                <li>Object</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Типы данных</h3>
+            <ul class="fragment" data-fragment-index="0">
+                <li>Примитивные типы данных</li>
+                <li>Объекты</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>В чем разница?</h3>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Объекты имеют методы</li>
+                <li class="fragment" data-fragment-index="1">А структуры нет</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>В чем разница?</h3>
+                <pre class="size-S javascript"><code data-trim>
+var student = {
+    wakeUp: function() {
+        console.log('Я НЕ СПЛЮ!');
+    };
+};
+
+student.wakeUp();
+                </code></pre>
+                <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+// 'Я НЕ СПЛЮ!'
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>В чем разница?</h3>
+                <pre class="size-S javascript"><code data-trim>
+var answer = 42;
+
+answer.toFixed(2);
+                </code></pre>
+                <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+// 42.00
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>То есть числа - это объекты?</h3>
+            <h4 class="fragment" data-fragment-index="1">Нет</h4>
+        </section>
+
+        <section>
+            <h3>В чем разница?</h3>
+                <pre class="size-S javascript"><code data-trim>
+var answer = 42;
+
+answer.toFixed(2);
+                </code></pre>
+                <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var answer = 42;
+
+(new Number(answer)).toFixed(2);
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>А может я вас обманываю?</h3>
+                <pre class="size-S javascript"><code data-trim>
+var answer = 42;
+
+answer.secret = 'немного магии';
+
+answer.secret;
+                </code></pre>
+                <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+undefined;
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>А может я вас обманываю?</h3>
+                <pre class="size-S javascript"><code data-trim>
+var answer = 42;
+
+(new Number(answer))
+    .secret = 'немного магии';
+
+answer.secret;
+                </code></pre>
+                <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+undefined;
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>А как мне сохранить секрет?</h3>
+                <pre class="size-S javascript"><code data-trim>
+var answer = new Number(42);
+
+answer.secret = 'немного магии';
+
+answer.secret;
+                </code></pre>
+                <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+'немного магии';
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>Number</h3>
+            <h4>Функция-конструктор</h4>
+        </section>
+
+        <section>
+            <h3>Number: обычный вызов </h3>
+                <pre class="size-S javascript"><code data-trim>
+var answer = '42';
+
+Number(answer);
+                </code></pre>
+                <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+// 42
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>Number: вызов через 'new'</h3>
+                <pre class="size-S javascript"><code data-trim>
+var answer = '42';
+var result = new Number(answer);
+
+result;
+                </code></pre>
+                <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+// Number {[[PrimitiveValue]]: 42}
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>Объекты-оболочки</h3>
+                <pre class="size-S javascript"><code data-trim>
+var answer = '42';
+var result = new Number(answer);
+
+result == 42;
+result === 42;
+typeof result;
+                </code></pre>
+                <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+// true
+// false
+// object
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>Конструкторы примитивных типов</h3>
+                <ul>
+                    <li>Number</li>
+                    <li>Boolean</li>
+                    <li>String</li>
+                </ul>
+        </section>
+
+        <section>
+            <h3>Где можно встретить объекты-оболочки:</h3>
+            <ul>
+                <li>Случайно написали new Number('42')</li>
+                <li class="fragment" data-fragment-index="0">Пришли на собеседование :)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Когда-то нужно использовать?</h3>
+            <h4 class="fragment" data-fragment-index="0">Никогда</h4>
+        </section>
+
+        <section>
+            <h3>Хитрый пример</h3>
+                <pre class="size-S javascript"><code data-trim>
+var isChecked = new Boolean(false);
+
+if (isChecked) {
+    console.log('checked');
+} else {
+    console.log('unchecked');
+}
+                </code></pre>
+                <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+// checked
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>Объект</h3>
+        </section>
+
+        <section>
+            <h3>Создание объекта:</h3>
+            <ul>
+                <li class="fragment" data-fragment-index="0">Литерал</li>
+                <li class="fragment" data-fragment-index="1">Конструктор</li>
+                <li class="fragment" data-fragment-index="2">Object.create</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Литерал</h3>
+                <pre class="size-S javascript"><code data-trim>
+var empty = {};
+
+var driver = {
+    'first name': 'Max',
+    skills: {
+        mad: 1000
+    }
+};
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>Конструктор</h3>
+                <pre class="size-S javascript"><code data-trim>
+var empty = new Object();
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>Object.create</h3>
+                <pre class="size-S javascript"><code data-trim>
+var empty = Object.create(null);
+                </code></pre>
+        </section>
+
+        <section>
+            <h3>Какой способ лучше?</h3>
+            <h4 class="fragment" data-fragment-index="0">{}</h4>
+        </section>
+
+        <section>
+            <h3>Свойства</h3>
+        </section>
+
+        <section>
+            <h3>Получение свойств</h3>
+<pre class="size-S javascript"><code data-trim>
+var student = {
+    id: 1,
+    'full name': 'Alex'
+};
+
+student.id;
+student['id'];
+student['full name'];
+</code></pre>
+<pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+// 1
+// 1
+// 'Alex'
+</code></pre>
+        </section>
+
+        <section>
+            <h3>Установка значений</h3>
+<pre class="size-S javascript"><code data-trim>
+var student = {
+    id: 1,
+    'full name': 'Alex'
+};
+
+student.score = 1;
+student['score'] = 1;
+student['full name'] = 'Max;
+</code></pre>
+        </section>
+
+        <section>
+            <h3>Ошибки доступа к полям</h3>
+<pre class="size-S javascript"><code data-trim>
+var student = {
+    id: 1,
+    'full name': 'Alex'
+};
+
+student.score;
+student.score.toFixed(2);
+</code></pre>
+<pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+// undefined
+// TypeError
+</code></pre>
+        </section>
+
+        <section>
+            <h3>Удаление свойств</h3>
+<pre class="size-S javascript"><code data-trim>
+var student = {
+    id: 1,
+    score: 1,
+    'full name': 'Alex'
+};
+
+delete student.score;
+</code></pre>
+        </section>
+
+        <section>
+            <h3>Проверка наличия свойства</h3>
+<pre class="size-S javascript"><code data-trim>
+var student = {
+    id: 1,
+    score: 1,
+    'full name': 'Alex'
+};
+
+'id' in student;
+student.hasOwnProperty('score');
+</code></pre>
+        </section>
+
+        <section>
+            <h3>Проверка наличия свойства</h3>
+            <h4>Лучше .hasOwnProperty()</h4>
+        </section>
+
+        <section>
+            <h3>getter/setter</h3>
+<pre class="size-S javascript"><code data-trim>
+var student = {
+    name: 'Alex',
+    surname: 'Mangin'
+};
+</code></pre>
+        </section>
+
+        <section>
+<pre class="size-S javascript"><code data-trim>
+var student = {
+    getFullName: function() {
+        return this.name +
+            ' ' + this.surname;
+    },
+    setFullName: function (value) {
+        var parts = value.split(' ');
+        this.name = parts[0];
+        this.surname = parts[1];
+    }
+};
+
+student.getFullName();
+student.setFullName('Max Maxes');
+</code></pre>
+        </section>
+
+        <section>
+<pre class="size-S javascript"><code data-trim>
+var student = {
+    get fullName() {
+        return this.name +
+            ' ' + this.surname;
+    },
+    set fullName(value) {
+        var parts = value.split(' ');
+        this.name = parts[0];
+        this.surname = parts[1];
+    }
+};
+
+student.fullName;
+student.fullName = 'Max Maxes';
+</code></pre>
+        </section>
+
+        <section>
+            <h3>Что такое свойство?</h3>
+            <h4 class="fragment" data-fragment-index="0">Это объект</h4>
+            <ul class="fragment" data-fragment-index="1">
+                <li>Имя</li>
+                <li>Значение</li>
+                <li>Набор аттрибутов</li>
+            </ul>
+        </section>
+
+        <section>
+            <h4>Object.defineProperty(obj, prop, descriptor)</h4>
+            <ul>
+                <li>obj - объект</li>
+                <li>prop - имя свойства</li>
+                <li>descriptor - набор аттрибутов</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Descriptor</h3>
+            <ul>
+                <li>value</li>
+                <li>get</li>
+                <li>set</li>
+                <li>configurable</li>
+                <li>enumerable</li>
+                <li>writable</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Descriptor: value</h3>
+            <pre class="size-S javascript"><code data-trim>
+var student = {
+    name: 'Alex',
+    surname: 'Mangin'
+};
+
+Object.defineProperty(student,
+    'score', {value: 42});
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim>
+student.score = 42;
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Descriptor: configurable</h3>
+            <pre class="size-S javascript"><code data-trim>
+var student = {
+    name: 'Alex',
+    surname: 'Mangin'
+};
+
+Object.defineProperty(student,
+    'score', {
+    value: 42,
+    configurable: false
+});
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim>
+delete student.score;
+student.score; // 42
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Descriptor: enumerable</h3>
+            <pre class="size-S javascript"><code data-trim>
+var student = {};
+
+Object.defineProperty(student,
+    'score', {
+    value: 42,
+    enumerable: false
+});
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim>
+Object.keys(student); // []
+for (var x in student) {
+    console.log(x);
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Descriptor: writable</h3>
+            <pre class="size-S javascript"><code data-trim>
+var student = {
+    name: 'Alex',
+    surname: 'Mangin'
+};
+
+Object.defineProperty(student,
+    'score', {
+    value: 100500,
+    writable: false
+});
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim>
+student.score = 0;
+student.score; // 100500
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Descriptor: set/get</h3>
+            <pre class="size-S javascript"><code data-trim>
+var student = {
+    _score: 0
+};
+
+Object.defineProperty(student,
+    'score', {
+    set: function (rawValue) {...},
+    get: function () {...}
+});
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Default Descriptor</h3>
+            <pre class="size-S javascript"><code data-trim>
+Object.defineProperty({},
+    'score', {
+    configurable: false,
+    enumerable: false,
+    writable: false,
+    value: undefined,
+    set: undefined,
+    get: undefined
+});
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Default Descriptor при присваивании</h4>
+            <pre class="size-S javascript"><code data-trim>
+Object.defineProperty({},'score',
+    {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    value: 'Ваше значение',
+    set: undefined,
+    get: undefined
+});
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Нужно ли их использовать?</h3>
+            <h4>Все зависит от вас!</h4>
+        </section>
+
+        <section>
+            <h3>Полифилы</h3>
+            <pre class="size-S javascript"><code data-trim>
+var fns = Array.prototype;
+var define = Object.defineProperty;
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+fns.forEach = function () {
+    // ваша реализация
+}
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="1"><code data-trim>
+define(fns, 'forEach', {
+    value: function() {};
+    enumerable: false,
+    writable: true,
+    configurable: true
+});
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Сериализация</h3>
+            <pre class="size-S javascript"><code data-trim>
+var student = {
+    name: 'Alex',
+    surname: 'Mangin'
+}
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+JSON.stringify(student);
+// {"name":"Alex",
+// "surname":"Mangin"}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Сериализация</h3>
+            <pre class="size-S javascript"><code data-trim>
+var student = {
+    privateData: {secret: '42'}
+}
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+JSON.stringify(student,
+    function (key, value) {
+        if (key === 'privateData') {
+            return null;
+        }
+        return value;
+});
+// {"privateData":null}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Проблемы сериализации</h3>
+            <pre class="size-S javascript"><code data-trim>
+var student = {};
+student.self = student;
+
+JSON.stringify(student);
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+// Uncaught TypeError: Converting
+// circular structure to JSON
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Проблемы сериализации</h3>
+            <pre class="size-S javascript"><code data-trim>
+var student = {
+    print: function () {
+        console.log('Mangin Alex');
+    },
+    regexp: /d+/
+};
+
+JSON.stringify(student);
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+{"regexp":{}}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Обход при сериализации</h3>
+            <h4 class="fragment" data-fragment-index="0">В ширину</h4>
+        </section>
+
+        <section>
+            <h3>Десериализация</h3>
+            <pre class="size-S javascript"><code data-trim>
+var rawStudent =  '{"name":"Alex"}';
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+JSON.parse(rawStudent);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Десериализация</h3>
+            <pre class="size-S javascript"><code data-trim>
+var rawStudent='{"name":"Alex", ' +
+    '"_meta"="student"}';
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+function deserialize (key, value) {
+  if (key === '' &&
+      value._meta === 'student') {
+    return createStudent(value);
+  }
+  return value;
+}
+
+JSON.parse(rawStudent, deserialize);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Обход при десериализации</h3>
+            <h4 class="fragment" data-fragment-index="0">В глубину</h4>
+        </section>
+
+        <section>
+            <h3>Массивы</h3>
+        </section>
+
+        <section>
+            <h3>forEach</h3>
+            <pre class="size-S javascript"><code data-trim>
+var numbers = [1, 1, 2, 3, 5];
+
+for (var i = 0 ; i < 5; i ++) {
+    console.log(numbers[i]);
+});
+
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+numbers.forEach(function (n) {
+    console.log(n);
+});
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>map</h3>
+            <pre class="size-S javascript"><code data-trim>
+var numbers = [1, 1, 2, 3, 5];
+var result = []
+
+for (var i = 0 ; i < 5; i ++) {
+    result.push(numbers[i]*numbers[i])
+});
+            </code></pre>
+<pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var result = numbers.map(function (n) {
+    return n*n;
+});
+</code></pre>
+        </section>
+
+        <section>
+            <pre class="size-S javascript"><code data-trim>
+var numbers = [1, 1, 2, 3, 5];
+var result = []
+for (var i = 0 ; i < 5; i ++) {
+    if (numbers[i] % 2 === 0) {
+        result.push(numbers[i]);
+        break;
+    }
+});
+            </code></pre>
+<pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var result = numbers.filter(function (n) {
+    return n % 2;
+});
+</code></pre>
+        </section>
+
+        <section>
+            <pre class="size-S javascript"><code data-trim>
+var numbers = [1, 1, 2, 3, 5];
+var isBiggerThanTen = false;
+
+for (var i = 0 ; i < 5; i ++) {
+    if  (numbers[i] > 10) {
+        isBiggerThanTen = true;
+        break;
+    }
+});
+            </code></pre>
+<pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var result = numbers.some(function (n) {
+    return n > 10;
+});
+</code></pre>
+        </section>
+
+        <section>
+            <pre class="size-S javascript"><code data-trim>
+var numbers = [1, 1, 2, 3, 5];
+var isBiggerThanTen = true;
+
+for (var i = 0 ; i < 5; i ++) {
+    if(numbers[i] >= 10) {
+        isBiggerThanTen = false;
+        break;
+    }
+});
+            </code></pre>
+<pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var numbers = [1, 1, 2, 3, 5];
+
+var result = numbers.every(function (n) {
+    return n < 10;
+});
+</code></pre>
+        </section>
+
+        <section>
+            <pre class="size-S javascript"><code data-trim>
+var numbers = [1, 1, 2, 3, 5];
+var dict = {};
+
+for (var i = 0 ; i < 5; i ++) {
+    dict[i] = numbers[i]*numbers[i];
+});
+            </code></pre>
+<pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+function callback(dict, value) {
+    dict[value] = value * value;
+    return dict;
+}
+
+var result =
+    numbers.reduce(callback, {});
+</code></pre>
+        </section>
+
+        <section>
+            <h3>Date</h3>
+        </section>
+
+        <section>
+            <h3>Date</h3>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var now = new Date();
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Date</h3>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+// 24 часа после 01.01.1970 GMT+0
+var jan02_1970
+    = new Date(3600 * 24 * 1000);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Date</h3>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var now = new Date(year, month,
+    date, hours, minutes,
+    seconds, ms);
+// year > 1970
+// month >= 0
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Получение компонента Date</h4>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var date = new Date();
+date.getFullYear(); // год
+date.getMonth(); // месяц
+date.getDate(); // день
+date.getHours(); // час
+date.getMinutes(); // минуты
+date.getSeconds(); // секунды
+date.getMilliseconds(); // милисекунды
+date.getDay(); // день недели
+            </code></pre>
+        </section>
+
+        <section>
+            <h4>Получение компонента Date</h4>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var date = new Date();
+date.getUTCFullYear(); // год
+date.getUTCMonth(); // месяц
+date.getUTCDate(); // день
+date.getUTCHours(); // час
+date.getUTCMinutes(); // минуты
+date.getUTCSeconds(); // секунды
+date.getUTCMilliseconds(); // милисекунды
+date.getUTCDay(); // день недели
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>getTime()</h3>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var date = new Date();
+date.getTime();
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>getTimezoneOffset()</h3>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var date = new Date();
+date.getTimezoneOffset(); // -300
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Date.now()</h3>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+Date.now(); // 1446448043192
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Установка полей Date</h3>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+var date = new Date();
+date.setFullYear(2014);
+date.setMonth(2);
+date.setDate(12);
+date.setHours(10);
+date.setMinutes(23);
+date.setSeconds(60);
+date.setMilliseconds(500);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Автоисправление Date</h3>
+            <pre class="size-S javascript"><code data-trim>
+var date = new Date(2013, 0, 32);
+// 32 января 2013 ?!?
+            </code></pre>
+            <pre class="size-S javascript fragment" data-fragment-index="0"><code data-trim>
+date;
+// ... это 1 февраля 2013!
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Профилирование кода</h3>
+            <pre class="size-S javascript"><code data-trim>
+var start = Date.now()
+
+// ваш код
+
+var end = Date.now();
+console.log(end - start);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Профилирование кода</h3>
+            <pre class="size-S javascript"><code data-trim>
+console.time('test1')
+
+// ваш код
+
+console.timeEnd('test1');
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Десериализация Date</h3>
+            <pre class="size-S javascript"><code data-trim>
+var date = Date.parse('some date');
+            </code></pre>
+            <ul class="fragment" data-fragment-index="0">
+                <li>YYYY-MM-DD</li>
+                <li>THH:mm:ss.sss</li>
+                <li>Z+-hh:mm</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Десериализация Date</h3>
+            <pre class="size-S javascript"><code data-trim>
+Date.parse('2012-01-26'+
+    'T13:51:50.417');
+Date.parse('2012-01-26');
+Date.parse('2012-01-26'+
+    'T13:51:50.417Z10:30');
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Math</h3>
+        </section>
+
+        <section>
+            <h3>Константы</h3>
+            <pre class="size-S javascript"><code data-trim>
+Math.E; // 2,718
+Math.LN2; // ln 2  0,693.
+Math.LN10; // ln 10 2.303.
+Math.LOG2E; // log(2, e) 1.443
+Math.LOG10E; // log(10, e) 1.443
+Math.PI; // 3.14
+Math.SQRT1_2; // sqrt(1/2) 0,707.
+Math.SQRT2; // sqrt(2) 1.414
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Функции</h3>
+            <pre class="size-S javascript"><code data-trim>
+Math.sign(x);
+Math.abs(x);
+Math.floor(x);
+Math.round(x);
+Math.log(x);
+Math.max(a,b,c, ...);
+Math.min(a,b,c ...;
+Math.random();
+Math.sqrt(x);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Функции</h3>
+            <pre class="size-S javascript"><code data-trim>
+Math.cos(x);
+Math.sin(x);
+Math.tan(x);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Домашнее задание</h3>
+        </section>
+    </div>
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.js"></script>
+
+<script>
+
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        slideNumber: true,
+        history: true,
+        center: true,
+        hideAddressBar: true,
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+            {
+                src: '../lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            }
+            },
+            {
+                src: '../plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: '../plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: '../plugin/highlight/highlight.js', async: true, condition: function () {
+                return !!document.querySelector('pre code');
+            }, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            },
+            { src: '../plugin/zoom-js/zoom.js', async: true },
+            { src: '../plugin/notes/notes.js', async: true }
+        ]
+    });
+
+</script>
+
+</body>
+</html>

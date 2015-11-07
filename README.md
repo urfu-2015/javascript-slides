@@ -7,4 +7,4 @@
 2. [Основы](https://rawgit.com/urfu-2015/javascript-slides/master/02-basic/index.html) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-2))
 3. [Функции](https://rawgit.com/urfu-2015/javascript-slides/master/03-functions/index.html) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-3))
 4. [Замыкание и Всплытие](https://rawgit.com/urfu-2015/javascript-slides/master/04-closure-and-hoisting/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-4))
-4. [this](https://cdn.rawgit.com/Zhigalov/javascript-slides/master/05-this/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-5))
+5. [this](https://cdn.rawgit.com/Zhigalov/javascript-slides/master/05-this/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-5))
