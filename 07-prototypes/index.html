@@ -1,0 +1,1137 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>JavaScript, Prototypes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="../css/reveal.css">
+    <link rel="stylesheet" href="../css/theme/yandex.css" id="theme">
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+    <link rel="stylesheet" href="./css/user.css">
+</head>
+<body class="yandex"><div class="reveal"><div class="slides">
+
+<section class="large">
+<h4>Прототипы</h4>
+<h5 class="fragment">Сага. Часть I</h5>
+<p class="author"><small>Гоголев Сергей</small></p>
+</section>
+
+<section data-background="#800" data-background-transition="ease-in">
+   <div class="disclaimer">
+       <h4>ВНИМАНИЕ</h4>
+       Все примеры кода использованные в данной презентации вымышлены.
+       Любые совпадения с реальными кодстайлами, живыми или мертвыми, абсолютно случайны.
+       Вы предупреждены ... Сергей
+   </div>
+</section>
+
+<section>
+<h4>Студент</h4>
+<pre class="size-XS javascript"><code data-trim>
+var student = {
+    type: 'human',
+    name: 'Daria',
+    getName: function () {
+        console.log(this.name);
+    },
+    sleep: function () {
+        console.log('zzZZZ ...');
+    }
+}
+</code></pre>
+<pre class="size-S javascript fragment" data-fragment-index="2"><code data-trim>
+student.getName();
+// Daria
+</code></pre>
+</section>
+
+<section>
+<h4>Преподаватель</h4>
+<pre class="size-S javascript"><code data-trim>
+var lecturer = {
+    type: 'human',
+    name: 'Sergey',
+    getName: function () {
+        console.log(this.name);
+    }
+    talk: function () {}
+}
+</code></pre>
+</section>
+
+<section>
+<h4>Объекты <span>студента</span> и <span>предподавателя</span> похожи</h4>
+<div class="column"><pre class="size-XXS javascript">
+var student = {
+    <span class="fragment highlight yellow init_visible" data-fragment-index="1">type: 'human',</span>
+    <span class="fragment highlight yellow init_visible" data-fragment-index="1">name</span>: 'Daria',
+    <span class="fragment highlight yellow init_visible" data-fragment-index="1">getName: function() {},</span>
+    sleep: function() {}
+}
+</pre></div>
+<div class="column"><pre class="size-XXS javascript">
+var lecturer = {
+    <span class="fragment highlight yellow init_visible" data-fragment-index="1">type: 'human',</span>
+    <span class="fragment highlight yellow init_visible" data-fragment-index="1">name</span>: 'Sergey',
+    <span class="fragment highlight yellow init_visible" data-fragment-index="1">getName: function() {}</span>
+    talk: function() {}
+}
+</pre></div>
+<p class="fragment" data-fragment-index="2"><span class="red">Проблема:</span> дублирование кода</p>
+<p class="fragment" data-fragment-index="3"><span class="green">Решение:</span> выделить общие части</p>
+</section>
+
+<section>
+<h4>Личность</h4>
+<pre class="size-S javascript"><code data-trim>
+var person = {
+    type: 'human',
+    name: '?',
+    getName: function () {}
+}
+</code></pre>
+</section>
+
+<section>
+<h4>И так – три,  <span>не связанных</span> объекта:</h4>
+<div class="column"><pre class="size-XXS javascript"><code data-trim>
+var student = {
+    name: 'Daria',
+    sleep: function () {}
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript"><code data-trim>
+var lecturer = {
+    name: 'Sergey',
+    talk: function () {}
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript"><code data-trim>
+var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<p class="fragment" data-fragment-index="1">
+    <span class="green">Задача:</span> научить <span class="magenta">student</span> пользоваться общим кодом,
+    который вынесли в <span class="magenta">person</span></p>
+</section>
+
+<section>
+<h4 class="fragment highlight red init_visible" data-fragment-index="1">Заимствование метода</h4>
+<pre class="size-S javascript"><code data-trim>
+person.getName.call(student);
+// Daria
+</code></pre>
+<h4 class="fragment green" data-fragment-index="1">А хотелось бы как раньше ...</h4>
+<pre class="fragment size-S javascript" data-fragment-index="1"><code data-trim>
+student.getName();
+// Daria
+</code></pre>
+<p class="fragment" data-fragment-index="2">
+    Как мы можем связать объекты <span class="magenta">student</span> и <span class="magenta">person</span>,
+    чтобы это было возможным?
+</section>
+
+<section>
+<h4>Для этого у каждого объекта в JS</h4>
+<pre class="size-XXS javascript" data-fragment-index="1"><code data-trim>
+var student = {
+    name: 'Daria',
+    sleep: function () {}
+}
+</code></pre>
+<h4 class="fragment" data-fragment-index="1">Есть скрытое поле <span>[[Prototype]]</span></h4>
+<pre class="size-XXS javascript fragment" data-fragment-index="1"><code data-trim>
+var student = {
+    name: 'Daria',
+    sleep: function () {},
+    [[Prototype]]: <ссылка на объект>
+}
+</code></pre>
+</section>
+
+<section>
+<p>Мы можем связать два объекта, записав в <span class="magenta">[[Prototype]]</span>
+одного объекта <span class="green">student</span> ссылку на другой <span class="green">person</span></p>
+</section>
+
+<section>
+<h4 class="fragment highlight red init_visible" data-fragment-index="1">Обратиться напрямую нельзя</h4>
+<pre class="size-XXS javascript"><code data-trim>
+student['[[Prototype]]'] = person;
+</code></pre>
+<pre class="size-XXS fragment javascript" data-fragment-index="1"><code data-trim>
+// Так не работает
+</code></pre>
+<h4 class="fragment green" data-fragment-index="2">Но можно через специальный setter/getter <span>__proto__</span></h4>
+<pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+student.__proto__ = person;
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+var student = {
+    name: 'Daria',
+    sleep: function () {},
+    [[Prototype]]: <ссылка на person>
+}
+</code></pre>
+</section>
+
+<section>
+<h4>Итак, связали два объекта</h4>
+<div class="column"><pre class="size-XXS javascript" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    sleep: function () {},
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript" data-fragment-index="2"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+
+</code></pre></div>
+<p class="fragment">Объект, на который указывает ссылка [[Prototype]], называется <span class="magenta">прототипом</span>.</p>
+<p class="fragment grey">«person послужил прототипом для student»</p>
+</section>
+
+<section>
+<h4>Обращение к полю объекта</h4>
+<pre class="size-XXS javascript"><code data-trim>
+var student = {
+    name: 'Daria',
+    sleep: function () {},
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+console.log(student.name); // Поле есть в объекте
+// Daria
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+console.log(student.type); // Поля нет в объекте
+// ???
+</code></pre>
+</section>
+
+<section>
+<h4>Поиск поля в прототипе</h4>
+<div class="column"><pre class="size-XXS javascript"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<p class="fragment left" data-fragment-index="1">Если поля у объекта нет, то интерпретатор будет искать его в <span class="magenta">прототипе</span></p>
+<pre class="size-XXS javascript fragment"><code data-trim>
+console.log(student.type);
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// human
+</code></pre>
+</section>
+
+<section>
+<h4>Поиск метода в прототипе</h4>
+<div class="column"><pre class="size-XXS javascript"><code>var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript"><code>var person = {
+    type: 'human',
+    getName: function () {
+     console.log(this.name);
+    }
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment"><code data-trim>
+student.getName(); // Метод, которого нет у объекта
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// Daria
+</code></pre>
+<p class="fragment"><span class="magenta">this</span> при этом будет ссылаться на <span class="magenta">student</span></p>
+</section>
+
+<section>
+<h4 class="green">Мы решили нашу задачу</h4>
+<div class="column"><pre class="size-XXS javascript"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript"><code data-trim>
+var lecturer = {
+    name: 'Sergey',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript"><code data-trim>
+var person = {
+    getName: function () {}
+}
+</code></pre></div>
+<div class="fragment" data-fragment-index="2"><pre class="size-XXS javascript"><code data-trim>
+student.getName();
+// Daria
+lecturer.getName();
+// Sergey
+</code></pre></div>
+</section>
+
+<section>
+<h4>Но когда поиск остановится?</h4>
+<img width="100%"class="fragment" src="images/need-deeper.jpg">
+</section>
+
+<section>
+<h4>Но когда поиск остановится?</h4>
+<p class="left" style="font-size: 40px;" data-fragment-index="1">Интепретатор будет идти по цепочке прототипов
+<br>в поиске поля или метода, пока не встретит <span class="magenta">null</span><br>
+в поле <span class="magenta">[[Prototype]]</span></p>
+<div class="column fragment" data-fragment-index="2"><pre class="size-XXS javascript"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column fragment" data-fragment-index="3"><pre class="size-XXS javascript"><code>var person = {
+    type: 'human',
+    [[Prototype]]: null //?
+}
+</code></pre></div>
+<p><span class="fragment" data-fragment-index="3"><span class="fragment highlight rat init_visible" data-fragment-index="4">Null ???</span></span>
+    <span class="fragment green" data-fragment-index="4">Не совсем так!</span></p>
+</section>
+
+<section>
+<h4>Object.prototype</h4>
+<pre class="size-XXS javascript"><code data-trim>
+var person = {
+    type: 'human',
+    getName: function () {},
+    [[Prototype]]: &lt;Object.prototype&gt;
+}
+</code></pre>
+</section>
+
+<section>
+<h4><span>Object.prototype</span> – объект, который содержит самые общие методы
+для всех объектов</h4>
+</section>
+
+<section>
+<h4>Object.prototype<span>.toString()</span></h4>
+<pre class="size-XXS javascript"><code data-trim>
+Object.prototype = {
+    toString: function () {
+        // Сильная магия
+    }
+}
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+student.toString();
+// [object Object]
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+console.log('Hello, ' + student);
+// Hello, [object Object]
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// :(
+</code></pre>
+</section>
+
+<section>
+<h4>Object.prototype<span>.toString()</span></h4>
+<pre class="size-XXS javascript"><code data-trim>
+var student = {
+    name: 'Daria'
+    toString: function () {
+        return this.name;
+    }
+}
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+student.toString();
+// Daria
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+console.log('Hello, ' + student);
+// Hello, Daria
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// :)
+</code></pre>
+</section>
+
+<section>
+<h4>Object.prototype<span>.valueOf()</span></h4>
+<pre class="size-XXS javascript"><code data-trim>
+Object.prototype = {
+    toString: function () {},
+    valueOf: function () {
+        // Пытается преобразовать в примитив
+    }
+}
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+var width = { value: 30, units: 'px' }
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+width.valueOf();
+// {value: 30, units: "px"}
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+width < 45
+// false
+</code></pre>
+</section>
+
+<section>
+<h4>Object.prototype<span>.valueOf()</span></h4>
+<pre class="size-XXS javascript fragment"><code data-trim>
+var width = {
+    value: 30,
+    units: 'px',
+    valueOf: function () { return this.value; }
+}
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+width.valueOf();
+// 30
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+width < 45
+// true
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// :)
+</code></pre>
+</section>
+
+<section>
+<h4>Object.prototype<span>.hasOwnProperty()</span></h4>
+<pre class="size-XXS javascript"><code data-trim>
+Object.prototype = {
+    toString: function () {},
+    valueOf: function () {},
+    hasOwnProperty: function () {}
+}
+</code></pre>
+<p class="fragment">hasOwnProperty - определяет, принадлежит ли поле объекту лично (а не его прототипу)</p>
+</section>
+
+<section>
+<h4>Object.prototype<span>.hasOwnProperty()</span></h4>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+student.hasOwnProperty('name');
+// true
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="4"><code data-trim>
+student.hasOwnProperty('type');
+// false
+</code></pre>
+</section>
+
+<section>
+<h4>Object.prototype<span>.hasOwnProperty()</span></h4>
+<div class="column"><pre class="size-XXS javascript" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript" data-fragment-index="2"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<p class="fragment" data-fragment-index="3">Задача перечислить поля объекта <span class="magenta">student</span></p>
+<pre class="size-XXS javascript fragment" data-fragment-index="4"><code data-trim>
+for (var key in student) console.log(key);
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// 'name', 'type', 'getName'
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// :(
+</code></pre>
+<p class="fragment"><small><sup>*</sup>Оператор <span class="magenta">in</span> проверяет наличие свойства не только у объекта, но и в цепочке прототипов</small></p>
+</section>
+
+<section>
+<h4>Object.prototype<span>.hasOwnProperty()</span></h4>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+for (var key in student)
+    if (student.hasOwnProperty(key))
+       console.log(key);
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// 'name'
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// :/
+</code></pre>
+</section>
+
+<section>
+<h4>Object<span>.keys()</span></h4>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+// Получаем массив ключей
+var keys = Object.keys(student);
+
+console.log(keys);
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// 'name'
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// :)
+</code></pre>
+</section>
+
+<section>
+<h4>Но когда поиск остановится?</h4>
+<pre class="size-XXS javascript"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre>
+<pre class="size-XXS javascript"><code>var person = {
+    type: 'human',
+    [[Prototype]]: &lt;Object.prototype&gt;
+}
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+Object.prototype = {
+    hasOwnProperty: function () {},
+    [[Prototype]]: null
+}
+</code></pre>
+</section>
+
+<section>
+<p>Таким образом поиск всегда остановится<span class="fragment red">?</span><p>
+</section>
+
+<section>
+<pre class="size-XXS javascript"><code data-trim>
+var lecturer = { name: 'Sergey'}
+var student = { name: 'Daria' }
+
+lecturer.__proto__ = student;
+student.__proto__ = lecturer;
+
+console.log(lecturer.abrakadabra);
+</code></pre>
+<p class="red fragment">Uncaught TypeError: Cyclic __proto__ value</p>
+</section>
+
+<section>
+<p>Неужели нет способа по удобнее?</p>
+<pre class="size-S javascript"><code data-trim>
+student.__proto__ = person;
+</code></pre>
+</section>
+
+<section>
+<h4>Object<span>.setPrototypeOf()</span></h4>
+<p><small>Цивилизованный способ связывать объекты</small></p>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    sleep: function () {}
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+Object.setPrototypeOf(student, person);
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="4"><code data-trim>
+student.getName();
+// Daira
+</code></pre>
+</section>
+
+<section>
+<h4>Object<span>.setPrototypeOf()</span></h4>
+<div class="column"><pre class="size-XXS javascript" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    sleep: function () {}
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript" data-fragment-index="2"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+Object.setPrototypeOf(student, 42);
+</code></pre>
+<p class="red fragment">TypeError: Object prototype may only be an Object or null</p>
+</section>
+
+<section>
+<h4>Object<span>.getPrototypeOf()</span></h4>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment"><code data-trim>
+Object.getPrototypeOf(student) === person;
+// true
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+Object.getPrototypeOf(person) === Object.prototype;
+// true
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+Object.getPrototypeOf(Object.prototype) === null;
+// true
+</code></pre>
+</section>
+
+<section>
+<h4>Итак, что мы знаем про объекты?</h4>
+<ol class="left">
+<li class="fragment left">В JS всё является объектом</li>
+<li class="fragment left">Их можно связывать через <span class="magenta">[[Prototype]]</span></li>
+<li class="fragment left">Объекты по умолчанию связаны с <span class="magenta">Object.prototype</span></li>
+</ol>
+</section>
+
+<section>
+<h4>Прототип у массивов?</h4>
+<pre class="size-XXS javascript fragment"><code data-trim>
+var fruits = ['Apple', 'Banana', 'Potato'];
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+Object.getPrototypeOf(fruits);
+// Array.prototype;
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+Object.getPrototypeOf(Array.prototype)
+// Object.prototype;
+</code></pre>
+</section>
+
+<section>
+<h4>Array.prototype<span>.*</span></h4>
+<pre class="size-XXS javascript"><code data-trim>
+Array.prototype = {
+    concat: function () {},
+    slice: function () {},
+    splice: function () {},
+    forEach: function () {},
+    filter: function () {},
+    map: function () {},
+    [[Prototype]]: &lt;Object.prototype&gt;
+}
+</code></pre>
+</section>
+
+<section>
+<h4>Array.prototype<span>.*</span></h4>
+<pre class="size-XXS javascript"><code data-trim>
+var fruits = ['Apple', 'Banana', 'Potato'];
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+fruits.slice(1);
+// ['Banana', 'Potato']
+</code></pre>
+</section>
+
+<section>
+<h4>Прототип у функций?</h4>
+<pre class="size-XXS javascript fragment" data-fragment-index="1"><code data-trim>
+function kawabanga () {
+    console.log('Kawabanga!')
+}
+</code></pre>
+<img class="fragment" src="images/kawabanga.jpg" data-fragment-index="1">
+
+<pre class="size-XXS javascript fragment"><code data-trim>
+Object.getPrototypeOf(kawabanga);
+// Function.prototype;
+</code></pre>
+</section>
+
+<section>
+<h4>Function.prototype<span>.*</span></h4>
+<pre class="size-XXS javascript"><code data-trim>
+Object.getPrototypeOf(kawabanga);
+// Function.prototype;
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+Function.prototype = {
+    call: function () {},
+    apply: function () {},
+    bind: function () {},
+    [[Prototype]]: &lt;Object.prototype&gt;
+}
+</code></pre>
+</section>
+
+<section>
+<h4>Function.prototype<span>.*</span></h4>
+<pre class="size-XXS javascript"><code data-trim>
+function kawabanga () {
+    console.log('Kawabanga!')
+}
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+kawabanga.call(null);
+// Kawabanga!
+</code></pre>
+</section>
+
+<section>
+<h4>Поведение полей объекта с учётом <span>прототипов</span></h4>
+</section>
+
+<section>
+<h4>Установка полей объекта</span></h4>
+<pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    sleep: function () {}
+}
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+console.log(student.name);
+// Daira
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="4"><code data-trim>
+student.name = 'Anna';
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="5"><code data-trim>
+console.log(student.name);
+// Anna
+</code></pre>
+</section>
+
+<section>
+<h4>Установка не своих полей объекта</span></h4>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+console.log(student.type); // human
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="4"><code data-trim>
+student.type = 'pirat';
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="5"><code data-trim>
+console.log(student.type); // pirat
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="6"><code data-trim>
+console.log(person.type); // ???
+</code></pre>
+</section>
+
+<section>
+<h4>Установка не своих полей объекта</span></h4>
+<pre class="size-XXS javascript" data-fragment-index="0"><code data-trim>
+student.type = 'pirat';
+</code></pre>
+<pre class="size-XXS javascript" data-fragment-index="1"><code data-trim>
+console.log(person.type); // ???
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+console.log(person.type); // 'human'
+</code></pre>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+var student = {
+    name: 'Daria',
+    type: 'pirat',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="3"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<p class="fragment" data-fragment-index="4">Такой эффект называется <br><span class="magenta">затенением свойств</span></p>
+</section>
+
+<section>
+<h4>Свойства полей</h4>
+<p class="left fragment"><span class="magenta">writable</span> – помечает поле как изменяемое (<span class="green">true</span>, по умолчанию)</p>
+<p class="left fragment"><span class="magenta">setter/getter</span> - переопределение установки/чтения поля</p>
+<p class="left fragment"><span class="magenta">enumerable</span> – помечает поле как перечисляемое (<span class="green">true</span>, по умолчанию)</p>
+</section>
+
+<section class="no-transition">
+<h4>Свойства полей</h4>
+<p class="left"><span class="magenta">writable</span> – помечает поле как изменяемое (<span class="green">true</span>, по умолчанию)</p>
+<p class="left" style="visibility:hidden;"><span class="magenta">setter/getter</span> - переопределение установки/чтения поля</p>
+<p class="left" style="visibility:hidden;"><span class="magenta">enumerable</span> – помечает поле как перечисляемое (<span class="green">true</span>, по умолчанию)</p>
+
+</section>
+
+<section>
+<h4>Read-only поля</h4>
+<pre class="size-XXS javascript fragment"><code data-trim>
+var student = { name: 'Daria' }
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+Object.defineProperty(student, 'gender', {
+  writable: false,
+  value: 'female',
+});
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+console.log(student.gender); // female
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+student.gender = 'robot';
+console.log(student.gender); // ???
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// female
+</code></pre>
+</section>
+
+<section>
+<h4>Read-only поля <span class="green fragment">use strict;</span></h4>
+<pre class="size-XXS javascript fragment"><code data-trim>
+'use strict;'
+var student = { name: 'Daria' }
+Object.defineProperty(student, 'gender', {
+  writable: false,
+  value: 'female'
+});
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+student.gender = 'robot';
+</code></pre>
+<p class="red fragment">TypeError: Cannot assign to read only property 'gender' of object</p>
+</section>
+
+<section>
+<h4>Read-only поля в прототипах <span class="green">use strict;</span></span></h4>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria',
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var person = {
+    type: 'human',
+    getName: function () {}
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+'use strict;'
+Object.defineProperty(person, 'planet', {
+  writable: false, value: 'Earth'
+});
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="4"><code data-trim>
+console.log(student.planet); // Earth
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="5"><code data-trim>
+student.planet = 'Mars';
+</code></pre>
+<p class="red fragment"><small>TypeError: Cannot assign to read only property 'planet' of object</small></p>
+</section>
+
+<section>
+<h4>Свойства полей</h4>
+<p class="left fragment fade-out" data-fragment-index="1"><span class="magenta">writable</span> – помечает поле как изменяемое (<span class="green">true</span>, по умолчанию)</p>
+<p class="left"><span class="magenta">setter/getter</span> - переопределение установки/чтения поля</p>
+<p class="left fragment fade-out" data-fragment-index="1"><span class="magenta">enumerable</span> – помечает поле как перечисляемое (<span class="green">true</span>, по умолчанию)</p>
+</section>
+
+<section>
+<h4>Setter поля</h4>
+<pre class="size-XXS javascript"><code data-trim>
+var student = {
+    name: 'Daria'
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+Object.defineProperty(student, 'age', {
+    set: function(age) { this._age = parseInt(age); },
+    get: function() { return this._age; }
+});
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="4"><code data-trim>
+student.age = '20 лет';
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="5"><code data-trim>
+console.log(student.age); // 20;
+</code></pre>
+</section>
+
+<section>
+<h4><span>Не</span> setter поля в прототипах</h4>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var student = {
+    [[Prototype]]: &lt;person&gt;
+}
+
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var person = {
+    age: null,
+    type: 'human'
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment" data-fragment-index="4"><code data-trim>
+student.age = 20;
+</code></pre>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="5"><code data-trim>
+var student = {
+    age: 20,
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="5"><code>var person = {
+    age: null,
+    type: 'human'
+}
+</code></pre></div>
+<p class="fragment" data-fragment-index="7"><span class="magenta">Затенение свойства</span></p>
+</section>
+
+<section>
+<h4>Setter поля в прототипах</h4>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+var student = {
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var person = {
+    type: 'human'
+}
+</code></pre></div>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+Object.defineProperty(person, 'age', {
+    set: function(age) { this._age = parseInt(age); },
+    get: function() { return this._age; }
+});
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="4"><code data-trim>
+student.age = '20 лет';
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="5"><code data-trim>
+console.log(student.age); // 20;
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="6"><code data-trim>
+student.hasOwnProperty(age); // false;
+</code></pre>
+</section>
+
+<section>
+<h4>Свойства полей</h4>
+<p class="left fragment fade-out" data-fragment-index="1"><span class="magenta">writable</span> – помечает поле как изменяемое (<span class="green">true</span>, по умолчанию)</p>
+<p class="left fragment fade-out" data-fragment-index="1"><span class="magenta">setter/getter</span> - переопределение установки/чтения поля</p>
+<p class="left"><span class="magenta">enumerable</span> – помечает поле как перечисляемое (<span class="green">true</span>, по умолчанию)</p>
+</section>
+
+<section>
+<h4>Перечисляемые поля</h4>
+<pre class="size-XXS javascript fragment"><code data-trim>
+var student = { name: 'Daria', age: 20 }
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+for (var key in student) console.log(key);
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// name, age
+</code></pre>
+</section>
+
+<section>
+<h4>Неперечисляемые поля</h4>
+<pre class="size-XXS javascript fragment"><code data-trim>
+var student = { name: 'Daria' }
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+Object.defineProperty(student, 'age', {
+  enumerable: false,
+  value: '20'
+});
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+for (var key in student) console.log(key);
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+// name
+</code></pre>
+<pre class="size-XXS javascript fragment"><code data-trim>
+Object.keys(student);
+// name
+</code></pre>
+</section>
+
+<section>
+<h4>Неперечисляемые поля в прототипах</h4>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code data-trim>
+var student = {
+    name: 'Daria'
+    [[Prototype]]: &lt;person&gt;
+}
+</code></pre></div>
+<div class="column"><pre class="size-XXS javascript fragment" data-fragment-index="2"><code>var person = {
+    type: 'human'
+}
+
+</code></pre></div>
+<pre class="size-XXS javascript fragment" data-fragment-index="3"><code data-trim>
+Object.defineProperty(person, 'age', {
+    enumerable: false
+});
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="4"><code data-trim>
+for (var key in student) console.log(key);
+</code></pre>
+<pre class="size-XXS javascript fragment" data-fragment-index="5"><code data-trim>
+// name, type
+</code></pre>
+</section>
+
+<section>
+    <h4>Домашнее задание</h4>
+</section>
+
+<section>
+    <h4>Познавательная страничка</h4>
+    <img src="images/hrundel.jpeg">
+    <p class="author"><small>Хрюндель</small></p>
+</section>
+
+<section>
+    <h4>Метки на гитхабе. <span>Дедлайны</span></h4>
+
+    <p class="fragment left">
+        <span style="background:#13A3D4;padding: 0 5px;">create-after-deadline</span> - решение прислано после первого дедлайна
+    </p>
+    <p class="fragment left">
+        <span style="background:#13A3D4;padding: 0 5px;">closed-after-deadline</span> - задача принята уже после второго дедлайна
+    </p>
+</section>
+
+<section>
+    <h4>Метки на гитхабе. <span>Оценка</span></h4>
+
+    <p class="fragment left">
+        <span style="background:#00a804;padding: 0 5px;">accepted</span> - задача принята на 1 балл
+    </p>
+    <p class="fragment left">
+        <span style="background:#ffa442;color:black;padding: 0 5px;">half-points</span> - задача принята на 1/2 балла
+    </p>
+    <p class="fragment left">
+        <span style="background:#f00;padding: 0 5px;">duplicate</span> - решение списано
+    </p>
+</section>
+
+<section>
+    <h4>Условия</h4>
+    <p class="fragment">Всего будет <b class="magenta">10</b> задач</p>
+
+    <p class="left fragment"><span class="green"><b>8 баллов</b></span> – зачёт автоматом</p>
+    <p class="left fragment"><span><b>5 баллов</b></span> – минус задача/теория на зачёте</p>
+    <p class="left fragment"><span><b>3 балла</b></span> – допуск к зачёту</p>
+</section>
+
+<section>
+    <h4>Домашнее задание</h4>
+    <a class="fragment" href="https://github.com/urfu-2015/javascript-tasks-7">github.com/urfu-2015/javascript-tasks-7</a>
+    <br><br><br>
+    <p style="text-align: center" class="fragment deadline">Deadline<br> 17 ноября<br>02:59:59.999</p>
+</section>
+</div></div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.js"></script>
+<script>
+    Reveal.initialize({
+        controls: false,
+        progress: true,
+        slideNumber: true,
+        history: true,
+        center: true,
+        hideAddressBar: true,
+        transition: 'slide',
+        dependencies: [
+            {
+                src: '../plugin/highlight/highlight.js',
+                async: true,
+                condition: function () {
+                    return Boolean(document.querySelector('pre code'));
+                },
+                callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            }
+        ]
+    });
+</script>
+</body>
+</html>
