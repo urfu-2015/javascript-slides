@@ -9,4 +9,4 @@
 4. [Замыкание и Всплытие](https://rawgit.com/urfu-2015/javascript-slides/master/04-closure-and-hoisting/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-4))
 5. [this](https://cdn.rawgit.com/Zhigalov/javascript-slides/master/05-this/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-5))
 6. [objects](https://rawgit.com/urfu-2015/javascript-slides/master/06-objects/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-6))
-7. [objects](https://rawgit.com/urfu-2015/javascript-slides/master/07-prototypes/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-7))
+7. [Прототипы](https://rawgit.com/urfu-2015/javascript-slides/master/07-prototypes/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-7))
