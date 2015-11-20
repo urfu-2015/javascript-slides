@@ -244,7 +244,37 @@ setInterval(function () {
 
 <!-- BEGIN: parallelism -->
 
-<!-- by @grumpy -->
+<section>
+<h4>Параллельное выполнение</h4>
+</section>
+
+<section>
+<h4>node.js: child_process</h4>
+<pre>
+<span class="fragment highlight yellow init_visible current-visible">var exec = require('child_process').exec;</span>
+<span class="fragment highlight yellow init_visible current-visible">var child = exec('node ./child.js');</span>
+
+<span class="fragment highlight yellow init_visible current-visible">child.stdout.on('data', function(data) {
+    console.log('stdout: ' + data);
+});</span>
+
+<span class="fragment highlight yellow init_visible current-visible">child.stdin.write("Hello there!");</span>
+</pre>
+</section>
+
+<section>
+<h4>браузер: Web Workers</h4>
+<pre>
+<span class="fragment highlight yellow init_visible current-visible">var myWorker = new Worker("worker.js");</span>
+
+<span class="fragment highlight yellow init_visible current-visible">myWorker.onmessage = function(e) {
+    result.textContent = e.data;
+    console.log('Message received from worker');
+}</span>
+
+<span class="fragment highlight yellow init_visible current-visible">myWorker.postMessage([first.value,second.value]);</span>
+</pre>
+</section>
 
 <!-- END: parallelism -->
 
