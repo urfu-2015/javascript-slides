@@ -18,8 +18,222 @@
 
 <!-- BEGIN: event loop -->
 
-<!-- by @grumpy -->
+<section>
+<h4>Последовательное выполнение</h4>
+<pre>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="0">
+function foo() {
+    console.log('функция foo была вызвана');
+}
+function bar() {
+    console.log('функция bar была вызвана')
+}
+</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">foo();</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="2">bar();</span>
 
+
+<span class="fragment" data-fragment-index="1">&gt; функция foo была вызвана</span>
+<span class="fragment" data-fragment-index="2">&gt; функция bar была вызвана</span>
+</pre>
+</section>
+
+<section>
+<h4>Асинхронное выполнение</h4>
+<pre>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="0">
+function foo() {
+    console.log('функция foo была вызвана');
+}
+function bar() {
+    console.log('функция bar была вызвана')
+}
+</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">setTimeout(function () {</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="3">    foo();</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">}, 1000);</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="2">bar();</span>
+
+<span class="fragment" data-fragment-index="2">&gt; функция bar была вызвана</span>
+<span class="fragment" data-fragment-index="3">&gt; функция foo была вызвана</span>
+</pre>
+</section>
+
+<section>
+<h4>Таймеры</h4>
+<pre>
+setTimeout(function () {
+    console.log('setTimeout сработал');
+}, 1000);
+
+setInterval(function () {
+    console.log('setInterval сработал');
+}, 1000);
+
+
+<span class="fragment" data-fragment-index="1">&gt; setTimeout сработал</span>
+<span class="fragment" data-fragment-index="1">&gt; setInterval сработал</span>
+<span class="fragment" data-fragment-index="2">&gt; setInterval сработал</span>
+<span class="fragment" data-fragment-index="3">&gt; setInterval сработал</span>
+<span class="fragment" data-fragment-index="4">&gt; setInterval сработал</span>
+</pre>
+</section>
+
+<section data-transition="default-in none-out">
+<h4>Блокирующие операции</h4>
+
+<pre>
+<span class="fragment highlight red" data-fragment-index="1">console.time('Файлы');</span>
+var gang = fs.readFileSync('gang.json');
+<span class="fragment highlight red" data-fragment-index="1">console.timeEnd('Файлы');</span>
+
+
+<span class="fragment highlight red" data-fragment-index="1">console.time('Вычисления');</span>
+var moment = robbery.getAppropriateMoment();
+var message = moment.format('%HH:%MM!');
+<span class="fragment highlight red" data-fragment-index="1">console.timeEnd('Вычисления');</span>
+
+
+<span class="fragment" data-fragment-index="2">&gt; Файлы: 0.581ms</span>
+<span class="fragment" data-fragment-index="2">&gt; Вычисления: 2.759ms</span>
+</pre>
+</section>
+
+<section data-transition="none">
+<h4>Блокирующие операции</h4>
+
+<pre>
+<span class="highlight red">console.time('Файлы');</span>
+var gang = fs.readFileSync('gang.json');
+<span class="fragment init_visible highlight yellow" data-fragment-index="1">var rules = fs.readFileSync('rules.pdf');</span>
+<span class="highlight red">console.timeEnd('Файлы');</span>
+
+<span class="highlight red">console.time('Вычисления');</span>
+var moment = robbery.getAppropriateMoment();
+var message = moment.format('%HH:%MM!');
+<span class="highlight red">console.timeEnd('Вычисления');</span>
+
+
+<span class="fragment" data-fragment-index="2">&gt; Файлы: 5.666ms</span>
+<span class="fragment" data-fragment-index="2">&gt; Вычисления: 2.735ms</span>
+</pre>
+</section>
+
+<section data-transition="none-in default-out">
+<h4>Блокирующие операции</h4>
+
+<pre>
+<span class="highlight red">console.time('Файлы');</span>
+var file = 'https://rawgit.com/.../gang.json';
+<span class="fragment init_visible highlight yellow" data-fragment-index="1">var gang = getRequestSync('file');</span>
+<span class="highlight red">console.timeEnd('Файлы');</span>
+
+<span class="highlight red">console.time('Вычисления');</span>
+var moment = robbery.getAppropriateMoment();
+var message = moment.format('%HH:%MM!');
+<span class="highlight red">console.timeEnd('Вычисления');</span>
+
+
+<span class="fragment" data-fragment-index="2">&gt; Файлы: <span class="highlight red">167.050ms</span></span>
+<span class="fragment" data-fragment-index="2">&gt; Вычисления: 2.702ms</span>
+</pre>
+</section>
+
+<section><div>
+<p>Операции <span class="magenta">ввода-вывода</span> (IO) занимают значительно больше времени, чем вычислительные операции.</p>
+<p>&nbsp;</p>
+</div>
+</section>
+
+<section data-transition="default-in none-out">
+<h4>Блокировка выполнения</h4>
+<pre>
+console.log('Начинаем');
+
+setInterval(function () {
+    console.log('setInterval сработал');
+}, 1000);
+
+
+
+
+
+<span class="fragment">&gt; Начинаем</span>
+<span class="fragment">&gt; setInterval сработал</span>
+<span class="fragment">&gt; setInterval сработал</span>
+<span class="fragment">&gt; setInterval сработал</span>
+<span class="fragment">&gt; setInterval сработал</span>
+<span class="fragment">&gt; setInterval сработал</span>
+</pre>
+</section>
+
+<section data-transition="none-in default-out">
+<h4>Блокировка выполнения</h4>
+<pre>
+console.log('Начинаем');
+
+setInterval(function () {
+    console.log('setInterval сработал');
+}, 1000);
+
+<span class="magenta">fs.readFileSync('huge.txt');</span>
+console.log('Файл прочитан');
+
+
+<span class="fragment">&gt; Начинаем</span>
+<span class="fragment">&gt; ...</span>
+<span class="fragment">&gt; ...</span>
+<span class="fragment">&gt; Файл прочитан</span>
+<span class="fragment">&gt; setInterval сработал</span>
+<span class="fragment">&gt; setInterval сработал</span>
+</pre>
+</section>
+
+<section>
+<h4>Асинхронные функции</h4>
+<pre>
+console.log('Начинаем');
+
+setInterval(function () {
+    console.log('setInterval сработал');
+}, 1000);
+
+<span class="magenta">fs.readFile('huge.txt', function () {
+    console.log('Файл прочитан');    
+});</span>
+
+
+<span class="fragment">&gt; Начинаем</span>
+<span class="fragment">&gt; setInterval сработал</span>
+<span class="fragment">&gt; setInterval сработал</span>
+<span class="fragment">&gt; Файл прочитан</span>
+<span class="fragment">&gt; setInterval сработал</span>
+<span class="fragment">&gt; setInterval сработал</span>
+</pre>
+</section>
+
+<section>
+    <p><span class="red">Когда писать асинхронный код?</span></p>
+
+    <ul>
+        <li class="fragment">отложенные операции</li>
+        <li class="fragment">работа с вводом-выводом</li>
+    </ul>
+</section>
+
+<section>
+    <p><span class="magenta">Как это работает?</span></p>
+</section>
+
+<section>
+    <h4>event loop</h4>
+    <p>=</p>
+    <p>call stack</p>
+    <p>+</p>
+    <p>event queue</p>
+    <p>+</p>
+    <p>APIs</p>
+</section>
 <!-- END: event loop -->
 
 <!-- BEGIN: patterns and tooling -->
