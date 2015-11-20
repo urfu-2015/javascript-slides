@@ -413,6 +413,25 @@ function readTwoFiles(cb) {
         <p class="green fragment">Запускаем и работает :-)</p>
     </section>
 
+    <section>
+        <h4>callback</h4>
+        <h3 class="fragment"><a href="https://github.com/caolan/async">async.js</a></h3>
+    </section>
+
+    <section class="no-transition">
+        <h4>callback <span class="green">async.js</span></h4>
+        <pre class="size-XS javascript"><code>
+function readTwoFiles(cb) {
+    async.parallel([
+        fs.readFile.bind(fs, 'one.txt'),
+        fs.readFile.bind(fs, 'two.txt')
+    ], function (err, data) {
+        cb(err, data[0] + data[1])
+    });
+}
+        </code></pre>
+        <h4 class="fragment"><a href="https://github.com/caolan/async#control-flow">async.js</a></h4>
+    </section>
 </section>
 
 <!-- by @zhigalov -->
