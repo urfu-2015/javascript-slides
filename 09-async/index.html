@@ -237,6 +237,183 @@ setInterval(function () {
 <!-- END: event loop -->
 
 <!-- BEGIN: patterns and tooling -->
+<section>
+    <section>
+        <h3>Подходы к организации асинхронного кода</h3>
+        <ol>
+            <li class="fragment">callback</li>
+        </ol>
+    </section>
+
+    <section>
+        <h4>callback</h4>
+        <pre class="size-XS javascript"><code data-trim>
+fs.readFile('huge.txt', function (err, data) {
+    // содержимое файла лежит в
+    // переменной data
+});
+        </code></pre>
+        <p class="fragment">... хм, а что если нужно прочитать из двух файлов и объединить результат?</p>
+    </section>
+
+    <section class="no-transition">
+        <h4>callback</h4>
+        <pre class="size-XS javascript"><code data-trim>
+function readTwoFiles(cb) {
+    var otherData;</code></pre>
+
+<pre class="size-XS javascript fragment"><code data-trim>
+&nbsp;   fs.readFile('one.txt', function (err, data) {
+        if (err) { cb(err); }
+        if (otherData) {cb(null, data + otherData);}
+        else { otherData = data; }
+    });</code></pre>
+
+<pre class="size-XS javascript fragment"><code data-trim>
+&nbsp;   fs.readFile('two.txt', function (err, data) {
+        if (err) { cb(err); }
+        if (otherData) {cb(null, otherData + data);}
+        else { otherData = data; }
+    });</code></pre>
+<pre class="size-XS javascript fragment"><code data-trim>}</code></pre>
+    </section>
+
+    <section class="no-transition">
+        <h4>callback. <span class="red">Глубокий уровень вложенности</span></h4>
+        <pre class="size-XS javascript">
+function readTwoFiles(cb) {
+    var otherData;</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   <mark>fs.readFile('one.txt', function (err, data) {</mark>
+        <mark>if (err) { cb(err); }</mark>
+        <mark>if (otherData) {cb(null, data + otherData);}</mark>
+        <mark>else { otherData = data; }</mark>
+    });</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   <mark>fs.readFile('two.txt', function (err, data) {</mark>
+        <mark>if (err) { cb(err); }</mark>
+        <mark>if (otherData) {cb(null, otherData + data);}</mark>
+        <mark>else { otherData = data; }</mark>
+    });</pre>
+<pre class="size-XS javascript">}</pre>
+    </section>
+
+    <section data-background="images/pyramid_of_doom.jpg"></section>
+
+    <section class="no-transition">
+        <h4>callback. <span class="red">Разделение ошибок и данных</span></h4>
+        <pre class="size-XS javascript">
+function readTwoFiles(cb) {
+    var otherData;</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   fs.readFile('one.txt', function (err, data) {
+        if (err) { <mark>cb(err);</mark> }
+        if (otherData) {<mark>cb(null, data + otherData);</mark>}
+        else { otherData = data; }
+    });</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   fs.readFile('two.txt', function (err, data) {
+        if (err) { <mark>cb(err);</mark> }
+        if (otherData) {<mark>cb(null, otherData + data);</mark>}
+        else { otherData = data; }
+    });</pre>
+<pre class="size-XS javascript">}</pre>
+    </section>
+
+    <section class="no-transition">
+        <h4>callback. <span class="red">Обработка ошибки</span></h4>
+        <pre class="size-XS javascript">
+function readTwoFiles(cb) {
+    var otherData;</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   fs.readFile('one.txt', function (err, data) {
+        <mark>if (err) { cb(err); }</mark>
+        if (otherData) {cb(null, data + otherData);}
+        else { otherData = data; }
+    });</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   fs.readFile('two.txt', function (err, data) {
+        <mark>if (err) { cb(err); }</mark>
+        if (otherData) {cb(null, otherData + data);}
+        else { otherData = data; }
+    });</pre>
+<pre class="size-XS javascript">}</pre>
+    </section>
+
+    <section class="no-transition">
+        <h4>callback <span class="red">Необработанные исключения</span></h4>
+        <pre class="size-XS javascript">
+function readTwoFiles(cb) {
+    var otherData;</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   fs.readFile('one.txt', function (err, data) {
+        if (err) { cb(err); }
+        if (otherData) {cb(null, data + otherData);}
+        else { <mark>throw Error('Mu-ha-ha!');</mark> }
+    });</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   fs.readFile('two.txt', function (err, data) {
+        if (err) { cb(err); }
+        if (otherData) {cb(null, otherData + data);}
+        else { otherData = data; }
+    });</pre>
+<pre class="size-XS javascript">}</pre>
+    </section>
+
+    <section class="no-transition">
+        <h4>callback <span class="red">Лишние переменные</span></h4>
+        <pre class="size-XS javascript">
+function readTwoFiles(cb) {
+    <mark>var otherData;</mark></pre>
+
+<pre class="size-XS javascript">
+&nbsp;   fs.readFile('one.txt', function (err, data) {
+        if (err) { cb(err); }
+        if (otherData) {cb(null, data + otherData);}
+        else { <mark>otherData = data;</mark> }
+    });</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   fs.readFile('two.txt', function (err, data) {
+        if (err) { cb(err); }
+        if (otherData) {cb(null, otherData + data);}
+        else { <mark>otherData = data;</mark> }
+    });</pre>
+<pre class="size-XS javascript">}</pre>
+    </section>
+
+    <section class="no-transition">
+        <h4>callback <span class="green">Нет зависимостей</span></h4>
+        <pre class="size-XS javascript">
+function readTwoFiles(cb) {
+    var otherData;</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   fs.readFile('one.txt', function (err, data) {
+        if (err) { cb(err); }
+        if (otherData) {cb(null, data + otherData);}
+        else { otherData = data; }
+    });</pre>
+
+<pre class="size-XS javascript">
+&nbsp;   fs.readFile('two.txt', function (err, data) {
+        if (err) { cb(err); }
+        if (otherData) {cb(null, otherData + data);}
+        else { otherData = data; }
+    });</pre>
+<pre class="size-XS javascript">}</pre>
+        <p class="green fragment">Запускаем и работает :-)</p>
+    </section>
+
+</section>
 
 <!-- by @zhigalov -->
 

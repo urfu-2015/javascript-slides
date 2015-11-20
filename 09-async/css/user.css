@@ -76,10 +76,6 @@ pre.size-XXS {
     line-height: 45px;
 }
 
-h4 span {
-    color: #a0a0f0 !important;
-}
-
 .red {
     color: #ab4642;
 }
@@ -135,4 +131,11 @@ h4 span {
     text-shadow: 2px 5px #000;
     text-align: center;
     margin-top: 30px;
+}
+
+section pre.javascript {
+    font-family: monospace;
+    background: #3F3F3F;
+    padding: 5px;
+    width: auto !important;
 }
