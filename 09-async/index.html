@@ -434,6 +434,154 @@ function readTwoFiles(cb) {
     </section>
 </section>
 
+<section>
+    <section>
+        <h3>Подходы к организации асинхронного кода</h3>
+        <ol>
+            <li >callback</li>
+            <li class="fragment">promises</li>
+        </ol>
+    </section>
+
+    <section data-background="#fff">
+        <h4 style="color: black"><span class="grey">promises.</span> Состояния</h4>
+        <img src="images/promiseInit.png" alt="Promise states" />
+    </section>
+
+    <section class="no-transition">
+        <h4><span class="grey">promises.</span> Конструктор</h4>
+        <pre class="size-XS javascript"><code>new Promise(function (fulfill, reject){ ... });</code></pre>
+    </section>
+
+    <section class="no-transition">
+        <h4><span class="grey">promises.</span> Конструктор</h4>
+        <pre class="size-XS javascript"><code>new Promise(function (fulfill, reject){
+    fs.readFile(filename, function (err, data){
+        if (err) { reject(err); }
+        else { fulfill(res); }
+    });
+});</code></pre>
+    </section>
+
+    <section class="no-transition">
+        <h4><span class="grey">promises.</span> Фабрика промисов</h4>
+        <pre class="size-XS javascript"><code>function readFile(filename){
+    return new Promise(function (fulfill, reject){
+        fs.readFile(filename, function (err, data){
+            if (err) { reject(err); }
+            else { fulfill(data); }
+        });
+    });
+}</code></pre>
+    </section>
+
+    <section class="no-transition">
+        <h4><span class="grey">promises.</span> Запуск</h4>
+        <pre class="size-XS javascript"><code>var myPromise = readFile('one.txt');</code></pre>
+        <pre class="size-XS javascript fragment"><code>myPromise()
+    .then(function onSuccess() { ... },
+          function onRejected() { ... })</code></pre>
+
+        <pre class="size-XS javascript fragment"><code>myPromise()
+    .then(function onSuccess() { ... })
+    .catch(function onRejected() { ... })</code></pre>
+
+    <p class="fragment">
+        разделили объявление и запуск<span class="fragment"> ... и что?</span>
+    </p>
+    </section>
+
+    <section data-background="images/chaining.jpg"></section>
+
+    <section class="no-transition">
+        <h4><span class="grey">promises.</span> Чейнинг</h4>
+        <pre class="size-XS javascript fragment"><code>myPromise()
+   .then(function(data1) {...; return data2;})</code></pre>
+    <pre class="size-XS javascript fragment"><code>&nbsp;  .then(function(data2) {return new Promise(...);})</code></pre>
+    <pre class="size-XS javascript fragment"><code>&nbsp;  .then(function(data3) { })</code></pre>
+    </section>
+
+    <section class="no-transition">
+        <h4><span class="grey">promises.</span> Синхронно</h4>
+        <pre class="size-XS javascript fragment"><code>var firstPromise = readFile('one.txt');
+var secondPromise = readFile('two.txt');</code></pre>
+
+        <pre class="size-XS javascript fragment"><code>var first;
+firstPromise
+    .then(function (data) {
+        first = data;
+        return secondPromise;
+    })
+    .then(function (data) {
+        console.log(first + data);
+    })
+    .catch(function (err) {console.log(err);});</code></pre>
+    <p class="red fragment">
+        =(
+    </p>
+    </section>
+
+    <section class="no-transition">
+        <h4><span class="grey">promises.</span> Асинхронно</h4>
+        <h3><a href="https://github.com/petkaantonov/bluebird">bluebird</a></h3>
+    </section>
+
+    <section class="no-transition">
+        <h4><span class="grey">promises.</span> Асинхронно</h4>
+        <pre class="size-XS javascript fragment"><code>var firstPromise = readFile('one.txt');
+var secondPromise = readFile('two.txt');</code></pre>
+
+        <pre class="size-XS javascript fragment"><code>Promise.all([
+        firstPromise,
+        secondPromise
+    ])
+    .then(function (data) {
+        console.log(data[0] + data[1]);
+    })
+    .catch(function (err) {console.log(err);});</code></pre>
+    <p class="green fragment">
+        =)
+    </p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Подходы к организации асинхронного кода</h3>
+        <ol>
+            <li >callback</li>
+            <li >promises</li>
+            <li class="fragment">async/await</li>
+        </ol>
+    </section>
+
+    <section class="no-transition">
+        <h4>async await</h4>
+
+        <pre class ="size-XS javascript fragment"><code>async function readTwoFiles() {
+    console.log(
+        await firstPromise +
+        await secondPromise);
+}</code></pre>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h3>Подходы к организации асинхронного кода</h3>
+        <ol>
+            <li >callback</li>
+            <li >promises</li>
+            <li >async/await</li>
+            <li class="fragment">generators</li>
+        </ol>
+    </section>
+
+    <section>
+        [In progress...]
+    </section>
+</section>
+
 <!-- by @zhigalov -->
 
 <!-- END: patterns and tooling -->
