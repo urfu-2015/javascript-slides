@@ -20,9 +20,8 @@
 
 <section>
 <h4>Последовательное выполнение</h4>
-<pre>
-<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="0">
-function foo() {
+<pre class="javascript">
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="0">function foo() {
     console.log('функция foo была вызвана');
 }
 function bar() {
@@ -31,16 +30,29 @@ function bar() {
 </span>
 <span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">foo();</span>
 <span class="fragment highlight yellow init_visible current-visible" data-fragment-index="2">bar();</span>
+</pre>
 
-
+<h4>Console:</h4>
+<pre class="javascript">
 <span class="fragment" data-fragment-index="1">&gt; функция foo была вызвана</span>
 <span class="fragment" data-fragment-index="2">&gt; функция bar была вызвана</span>
 </pre>
 </section>
 
 <section>
+    <h4>Асинхронное выполнение</h4>
+    <pre class="size-XS javascript"><code data-trim>
+        var timeoutId = setTimeout(callback, delay);
+    </code></pre>
+
+    <pre class="size-XS javascript fragment"><code data-trim>
+        clearTimeout(timeoutId);
+    </code></pre>
+</section>
+
+<section>
 <h4>Асинхронное выполнение</h4>
-<pre>
+<pre class="javascript">
 <span class="fragment highlight yellow init_visible current-visible" data-fragment-index="0">
 function foo() {
     console.log('функция foo была вызвана');
@@ -53,15 +65,29 @@ function bar() {
 <span class="fragment highlight yellow init_visible current-visible" data-fragment-index="3">    foo();</span>
 <span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">}, 1000);</span>
 <span class="fragment highlight yellow init_visible current-visible" data-fragment-index="2">bar();</span>
+</pre>
 
+<h4>Console</h4>
+<pre class="javascript">
 <span class="fragment" data-fragment-index="2">&gt; функция bar была вызвана</span>
 <span class="fragment" data-fragment-index="3">&gt; функция foo была вызвана</span>
 </pre>
 </section>
 
 <section>
+    <h4>Асинхронное выполнение</h4>
+    <pre class="size-XS javascript"><code data-trim>
+        var intervalId = setInterval(callback, delay);
+    </code></pre>
+
+    <pre class="size-XS javascript fragment"><code data-trim>
+        clearInterval(intervalId);
+    </code></pre>
+</section>
+
+<section>
 <h4>Таймеры</h4>
-<pre>
+<pre class="javascript">
 setTimeout(function () {
     console.log('setTimeout сработал');
 }, 1000);
@@ -69,9 +95,10 @@ setTimeout(function () {
 setInterval(function () {
     console.log('setInterval сработал');
 }, 1000);
+</pre>
 
-
-<span class="fragment" data-fragment-index="1">&gt; setTimeout сработал</span>
+<h4>Console</h4>
+<pre class="javascript"><span class="fragment" data-fragment-index="1">&gt; setTimeout сработал</span>
 <span class="fragment" data-fragment-index="1">&gt; setInterval сработал</span>
 <span class="fragment" data-fragment-index="2">&gt; setInterval сработал</span>
 <span class="fragment" data-fragment-index="3">&gt; setInterval сработал</span>
@@ -82,7 +109,7 @@ setInterval(function () {
 <section data-transition="default-in none-out">
 <h4>Блокирующие операции</h4>
 
-<pre>
+<pre class="javascript">
 <span class="fragment highlight red" data-fragment-index="1">console.time('Файлы');</span>
 var gang = fs.readFileSync('gang.json');
 <span class="fragment highlight red" data-fragment-index="1">console.timeEnd('Файлы');</span>
@@ -92,9 +119,10 @@ var gang = fs.readFileSync('gang.json');
 var moment = robbery.getAppropriateMoment();
 var message = moment.format('%HH:%MM!');
 <span class="fragment highlight red" data-fragment-index="1">console.timeEnd('Вычисления');</span>
+</pre>
 
-
-<span class="fragment" data-fragment-index="2">&gt; Файлы: 0.581ms</span>
+<h4>Console:</h4>
+<pre class="javascript"><span class="fragment" data-fragment-index="2">&gt; Файлы: 0.581ms</span>
 <span class="fragment" data-fragment-index="2">&gt; Вычисления: 2.759ms</span>
 </pre>
 </section>
@@ -102,7 +130,7 @@ var message = moment.format('%HH:%MM!');
 <section data-transition="none">
 <h4>Блокирующие операции</h4>
 
-<pre>
+<pre class="javascript">
 <span class="highlight red">console.time('Файлы');</span>
 var gang = fs.readFileSync('gang.json');
 <span class="fragment init_visible highlight yellow" data-fragment-index="1">var rules = fs.readFileSync('rules.pdf');</span>
@@ -112,9 +140,10 @@ var gang = fs.readFileSync('gang.json');
 var moment = robbery.getAppropriateMoment();
 var message = moment.format('%HH:%MM!');
 <span class="highlight red">console.timeEnd('Вычисления');</span>
+</pre>
 
-
-<span class="fragment" data-fragment-index="2">&gt; Файлы: 5.666ms</span>
+<h4>Console:</h4>
+<pre class="javascript"><span class="fragment" data-fragment-index="2">&gt; Файлы: 5.666ms</span>
 <span class="fragment" data-fragment-index="2">&gt; Вычисления: 2.735ms</span>
 </pre>
 </section>
@@ -122,7 +151,7 @@ var message = moment.format('%HH:%MM!');
 <section data-transition="none-in default-out">
 <h4>Блокирующие операции</h4>
 
-<pre>
+<pre class="javascript">
 <span class="highlight red">console.time('Файлы');</span>
 var file = 'https://rawgit.com/.../gang.json';
 <span class="fragment init_visible highlight yellow" data-fragment-index="1">var gang = getRequestSync('file');</span>
@@ -132,8 +161,10 @@ var file = 'https://rawgit.com/.../gang.json';
 var moment = robbery.getAppropriateMoment();
 var message = moment.format('%HH:%MM!');
 <span class="highlight red">console.timeEnd('Вычисления');</span>
+</pre>
 
-
+<h4>Console:</h4>
+<pre class="javascript">
 <span class="fragment" data-fragment-index="2">&gt; Файлы: <span class="highlight red">167.050ms</span></span>
 <span class="fragment" data-fragment-index="2">&gt; Вычисления: 2.702ms</span>
 </pre>
@@ -147,7 +178,7 @@ var message = moment.format('%HH:%MM!');
 
 <section data-transition="default-in none-out">
 <h4>Блокировка выполнения</h4>
-<pre>
+<pre class="javascript">
 console.log('Начинаем');
 
 setInterval(function () {
@@ -156,8 +187,10 @@ setInterval(function () {
 
 
 
+</pre>
 
-
+<h4>Console:</h4>
+<pre class="javascript">
 <span class="fragment">&gt; Начинаем</span>
 <span class="fragment">&gt; setInterval сработал</span>
 <span class="fragment">&gt; setInterval сработал</span>
@@ -169,7 +202,7 @@ setInterval(function () {
 
 <section data-transition="none-in default-out">
 <h4>Блокировка выполнения</h4>
-<pre>
+<pre class="javascript">
 console.log('Начинаем');
 
 setInterval(function () {
@@ -178,9 +211,10 @@ setInterval(function () {
 
 <span class="magenta">fs.readFileSync('huge.txt');</span>
 console.log('Файл прочитан');
+</pre>
 
-
-<span class="fragment">&gt; Начинаем</span>
+<h4>Console:</h4>
+<pre class="javascript"><span class="fragment">&gt; Начинаем</span>
 <span class="fragment">&gt; ...</span>
 <span class="fragment">&gt; ...</span>
 <span class="fragment">&gt; Файл прочитан</span>
@@ -191,7 +225,7 @@ console.log('Файл прочитан');
 
 <section>
 <h4>Асинхронные функции</h4>
-<pre>
+<pre class="javascript">
 console.log('Начинаем');
 
 setInterval(function () {
@@ -199,11 +233,12 @@ setInterval(function () {
 }, 1000);
 
 <span class="magenta">fs.readFile('huge.txt', function () {
-    console.log('Файл прочитан');    
+    console.log('Файл прочитан');
 });</span>
+</pre>
 
-
-<span class="fragment">&gt; Начинаем</span>
+<h4>Console:</h4>
+<pre class="javascript"><span class="fragment">&gt; Начинаем</span>
 <span class="fragment">&gt; setInterval сработал</span>
 <span class="fragment">&gt; setInterval сработал</span>
 <span class="fragment">&gt; Файл прочитан</span>
@@ -594,7 +629,7 @@ var secondPromise = readFile('two.txt');</code></pre>
 
 <section>
 <h4>node.js: child_process</h4>
-<pre>
+<pre class="javascript">
 <span class="fragment highlight yellow init_visible current-visible">var exec = require('child_process').exec;</span>
 <span class="fragment highlight yellow init_visible current-visible">var child = exec('node ./child.js');</span>
 
@@ -608,7 +643,7 @@ var secondPromise = readFile('two.txt');</code></pre>
 
 <section>
 <h4>браузер: Web Workers</h4>
-<pre>
+<pre class="javascript">
 <span class="fragment highlight yellow init_visible current-visible">var myWorker = new Worker("worker.js");</span>
 
 <span class="fragment highlight yellow init_visible current-visible">myWorker.onmessage = function(e) {

@@ -11,7 +11,7 @@ function readTwoFiles(cb) {
 }
 
 function readTwoFiles(cb) {
-    async.parallel([
+    async.map([
         fs.readFile.bind(fs, __dirname + '/first.txt', 'utf-8'),
         fs.readFile.bind(fs, __dirname + '/second.txt', 'utf-8')
     ], function (err, data) {

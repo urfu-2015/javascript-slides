@@ -1,5 +1,5 @@
 var fs = require('fs');
-function (cb) {
+function readTwoFiles(cb) {
     var otherData;
 
     fs.readFile(__dirname + '/first.txt', 'utf-8', function (err, data) {
