@@ -12,162 +12,266 @@
 <body class="yandex"><div class="reveal"><div class="slides">
 
 <section class="large">
-<h4>Асинхронность</h4>
-<p class="author"><small>Жигалов Сергей</small></p>
+    <h2>Асинхронность</h2>
+    <p class="author"><small>Жигалов Сергей</small></p>
 </section>
 
-<!-- BEGIN: event loop -->
+<section data-background="#800" data-background-transition="ease-in">
+   <div class="disclaimer">
+       <h4>ВНИМАНИЕ</h4>
+       Все примеры кода, использованные в данной презентации, вымышлены.
+       Любые совпадения с реальными кодстайлами, живыми или мертвыми, абсолютно случайны.
+       Не повторяйте этого дома!
+   </div>
+</section>
 
 <section>
-<h4>Последовательное выполнение</h4>
-<pre class="javascript">
-<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="0">function foo() {
-    console.log('функция foo была вызвана');
+    <h4>Последовательное выполнение</h4>
+    <pre class="javascript"><code>function grist() {
+    console.log('Перемолоть кофейные зерна в кофемолке');
 }
-function bar() {
-    console.log('функция bar была вызвана')
+
+function addWater() {
+    console.log('Добавить немного воды');
+}
+
+function toStove() {
+    console.log('Поставить на плиту');
+}</code></pre>
+</section>
+
+<section>
+    <h4>Последовательное выполнение</h4>
+    <pre class="javascript"><span class="fragment highlight yellow init_visible current-visible" data-fragment-index="0">function grist() {
+    console.log('Перемолоть кофейные зерна в кофемолке');
+}
+function addWater() {
+    console.log('Добавить немного воды');
+}
+function toStove() {
+    console.log('Поставить на плиту');
 }
 </span>
-<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">foo();</span>
-<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="2">bar();</span>
-</pre>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">grist();</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="2">addWater();</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="3">toStove();</span></pre>
 
-<h4>Console:</h4>
-<pre class="javascript">
-<span class="fragment" data-fragment-index="1">&gt; функция foo была вызвана</span>
-<span class="fragment" data-fragment-index="2">&gt; функция bar была вызвана</span>
-</pre>
+    <span class="console">Console:</span>
+    <pre class="javascript"><span class="fragment" data-fragment-index="1">&gt; Перемолоть кофейные зерна в кофемолке</span>
+<span class="fragment" data-fragment-index="2">&gt; Добавить немного воды</span>
+<span class="fragment" data-fragment-index="3">&gt; Поставить на плиту</span></pre>
 </section>
 
 <section>
-    <h4>Асинхронное выполнение</h4>
-    <pre class="size-XS javascript"><code data-trim>
-        var timeoutId = setTimeout(callback, delay);
-    </code></pre>
-
-    <pre class="size-XS javascript fragment"><code data-trim>
-        clearTimeout(timeoutId);
-    </code></pre>
-</section>
-
-<section>
-<h4>Асинхронное выполнение</h4>
-<pre class="javascript">
-<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="0">
-function foo() {
-    console.log('функция foo была вызвана');
+    <h4>Call stack</h4>
+    <pre class="javascript"><code>function foo() {
+    bar();
 }
 function bar() {
-    console.log('функция bar была вызвана')
+    baz();
+}
+function baz() {
+    console.log('Hello, world!');
+}
+
+foo();</code></pre>
+
+    <a class="fragment" href="http://sameoldmadness.github.io/loupe/?code=CmZ1bmN0aW9uIGZvbygpIHsKICAgIGJhcigpOwp9CmZ1bmN0aW9uIGJhcigpIHsKICAgIGJheigpOwp9CmZ1bmN0aW9uIGJheigpIHsKICAgIGNvbnNvbGUubG9nKCdIZWxsbywgd29ybGQhJyk7Cn0KCmZvbygpOw%3D%3D!!!">Демо 1</a>
+</section>
+
+<section>
+    <h4><span class='grey'>Call stack.</span> Размер стека</h4>
+
+    <pre class="javascript"><code>function callMyself() {
+    callMyself();
+}</code></pre>
+
+    <pre class="javascript fragment"><code>callMyself();</code></pre>
+
+    <pre class="javascript fragment"><code>Uncaught RangeError: Maximum call stack size exceeded
+    at callMyself (<anonymous>:2:20)
+    at callMyself (<anonymous>:3:5)
+    at callMyself (<anonymous>:3:5)
+    ...</code></pre>
+</section>
+
+<section>
+    <h4><span class="grey">Call stack.</span> Ошибки</h4>
+
+    <pre class="javascript"><code>function foo() {
+    bar();
+}
+function bar() {
+    baz();
+}
+function baz() {
+    throw Error('My error');
+}
+
+foo();</code></pre>
+</section>
+
+<section>
+    <h4><span class="grey">Call stack.</span> Ошибки</h4>
+
+    <pre class="javascript"><code>Error: My error
+    at baz (index.js:9:11)
+    at bar (index.js:6:5)
+    at foo (index.js:3:5)
+    at Object.<anonymous> (index.js:12:1)</code></pre>
+</section>
+
+<section>
+    <h4>Call stack</h4>
+
+    <ul>
+        <li>При вызове функции - добавляем в стек</li>
+        <li>При завершении функции - убираем из стека</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Отложенное выполнение</h4>
+    <pre class="javascript"><code>function turnOn() {
+    console.log('Поставить турку на медленный огонь');
+}
+
+function turnOff() {
+    console.log('Выключить плиту');
+}
+
+setTimeout(function () {
+    turnOff();
+}, 5 * 60 * 1000); // 5 минут
+turnOn();</code></pre>
+</section>
+
+<section>
+    <h4>Отложенное выполнение</h4>
+    <pre class="javascript"><span class="fragment highlight yellow init_visible current-visible" data-fragment-index="0">function turnOn() {
+    console.log('Поставить турку на медленный огонь');
+}
+function turnOff() {
+    console.log('Выключить плиту');
 }
 </span>
 <span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">setTimeout(function () {</span>
-<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="3">    foo();</span>
-<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">}, 1000);</span>
-<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="2">bar();</span>
-</pre>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="3">    turnOff();</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">}, 5 * 60 * 1000); // 5 минут</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="2">turnOn();</span></pre>
 
-<h4>Console</h4>
-<pre class="javascript">
-<span class="fragment" data-fragment-index="2">&gt; функция bar была вызвана</span>
-<span class="fragment" data-fragment-index="3">&gt; функция foo была вызвана</span>
-</pre>
+    <span class="console">Console:</span>
+    <pre class="javascript"><span class="fragment" data-fragment-index="2">&gt; Включить плиту на медленный огонь</span>
+<span class="fragment" data-fragment-index="3">&gt; Выключить плиту</span></pre>
 </section>
 
 <section>
-    <h4>Асинхронное выполнение</h4>
-    <pre class="size-XS javascript"><code data-trim>
-        var intervalId = setInterval(callback, delay);
-    </code></pre>
-
-    <pre class="size-XS javascript fragment"><code data-trim>
-        clearInterval(intervalId);
-    </code></pre>
-</section>
-
-<section>
-<h4>Таймеры</h4>
-<pre class="javascript">
-setTimeout(function () {
-    console.log('setTimeout сработал');
-}, 1000);
+    <h4>Таймеры</h4>
+    <pre class="javascript"><code>setTimeout(function () {
+    console.log('Добавить корицу');
+}, 30 * 1000); // 30 секунд
 
 setInterval(function () {
-    console.log('setInterval сработал');
-}, 1000);
-</pre>
-
-<h4>Console</h4>
-<pre class="javascript"><span class="fragment" data-fragment-index="1">&gt; setTimeout сработал</span>
-<span class="fragment" data-fragment-index="1">&gt; setInterval сработал</span>
-<span class="fragment" data-fragment-index="2">&gt; setInterval сработал</span>
-<span class="fragment" data-fragment-index="3">&gt; setInterval сработал</span>
-<span class="fragment" data-fragment-index="4">&gt; setInterval сработал</span>
-</pre>
+    console.log('Тщательно перемешать');
+}, 30 * 1000); // 30 секунд</code></pre>
 </section>
 
-<section data-transition="default-in none-out">
-<h4>Блокирующие операции</h4>
+<section>
+    <h4>Таймеры</h4>
+    <pre class="javascript">setTimeout(function () {
+    <span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">console.log('Добавить корицу');</span>
+}, 30 * 1000); // 30 секунд
 
-<pre class="javascript">
-<span class="fragment highlight red" data-fragment-index="1">console.time('Файлы');</span>
-var gang = fs.readFileSync('gang.json');
-<span class="fragment highlight red" data-fragment-index="1">console.timeEnd('Файлы');</span>
+setInterval(function () {
+    <span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1"><span class="fragment highlight yellow init_visible current-visible" data-fragment-index="2"><span class="fragment highlight yellow init_visible current-visible" data-fragment-index="3"><span class="fragment highlight yellow init_visible current-visible" data-fragment-index="4">console.log('Тщательно перемешать');</span></span></span></span>
+}, 30 * 1000); // 30 секунд</pre>
 
-
-<span class="fragment highlight red" data-fragment-index="1">console.time('Вычисления');</span>
-var moment = robbery.getAppropriateMoment();
-var message = moment.format('%HH:%MM!');
-<span class="fragment highlight red" data-fragment-index="1">console.timeEnd('Вычисления');</span>
-</pre>
-
-<h4>Console:</h4>
-<pre class="javascript"><span class="fragment" data-fragment-index="2">&gt; Файлы: 0.581ms</span>
-<span class="fragment" data-fragment-index="2">&gt; Вычисления: 2.759ms</span>
-</pre>
+    <span class="console">Console:</span>
+    <pre class="javascript"><span class="fragment" data-fragment-index="1">&gt; Добавить корицу</span>
+<span class="fragment" data-fragment-index="1">&gt; Тщательно перемешать</span>
+<span class="fragment" data-fragment-index="2">&gt; Тщательно перемешать</span>
+<span class="fragment" data-fragment-index="3">&gt; Тщательно перемешать</span>
+<span class="fragment" data-fragment-index="4">&gt; Тщательно перемешать</span></pre>
 </section>
 
-<section data-transition="none">
-<h4>Блокирующие операции</h4>
+<section>
+    <h4>Call Stack</h4>
 
-<pre class="javascript">
-<span class="highlight red">console.time('Файлы');</span>
-var gang = fs.readFileSync('gang.json');
-<span class="fragment init_visible highlight yellow" data-fragment-index="1">var rules = fs.readFileSync('rules.pdf');</span>
-<span class="highlight red">console.timeEnd('Файлы');</span>
+    <pre class="javascript"><code>function foo() {
+    bar();
+}
 
-<span class="highlight red">console.time('Вычисления');</span>
-var moment = robbery.getAppropriateMoment();
-var message = moment.format('%HH:%MM!');
-<span class="highlight red">console.timeEnd('Вычисления');</span>
-</pre>
+function bar() {
+    baz();
+}
 
-<h4>Console:</h4>
-<pre class="javascript"><span class="fragment" data-fragment-index="2">&gt; Файлы: 5.666ms</span>
-<span class="fragment" data-fragment-index="2">&gt; Вычисления: 2.735ms</span>
-</pre>
+function baz() {
+    console.log('Hello, world!');
+}</code></pre>
+
+<pre class="javascript"><code>setTimeout(foo, 5000);</code></pre>
+
+    <a class="fragment" href="http://sameoldmadness.github.io/loupe/?code=CmZ1bmN0aW9uIGZvbygpIHsKICAgIGJhcigpOwp9CgpmdW5jdGlvbiBiYXIoKSB7CiAgICBiYXooKTsKfQoKZnVuY3Rpb24gYmF6KCkgewogICAgY29uc29sZS5sb2coJ0hlbGxvLCB3b3JsZCEnKTsKfQoKc2V0VGltZW91dChmb28sIDUwMDApOwo%3D!!!">Демо 2</a>
 </section>
 
-<section data-transition="none-in default-out">
-<h4>Блокирующие операции</h4>
+<section>
+    <h3>Event loop</h3>
 
-<pre class="javascript">
-<span class="highlight red">console.time('Файлы');</span>
-var file = 'https://rawgit.com/.../gang.json';
-<span class="fragment init_visible highlight yellow" data-fragment-index="1">var gang = getRequestSync('file');</span>
-<span class="highlight red">console.timeEnd('Файлы');</span>
+    <ul>
+        <li>Call Stack</li>
+        <li class="fragment">APIs</li>
+        <li class="fragment">Event queue</li>
+    </ul>
+</section>
 
-<span class="highlight red">console.time('Вычисления');</span>
+<section class="no-transition">
+    <h4>Медленные операции</h4>
+    <pre class="javascript"><span class="fragment highlight grey" data-fragment-index="1">console.time('Файл');</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="2">var data = fs.readFileSync('gang.json');</span>
+<span class="fragment highlight grey" data-fragment-index="1">console.timeEnd('Файл');</span>
+
+<span class="fragment highlight grey" data-fragment-index="1">console.time('Вычисления');</span>
 var moment = robbery.getAppropriateMoment();
 var message = moment.format('%HH:%MM!');
-<span class="highlight red">console.timeEnd('Вычисления');</span>
-</pre>
+<span class="fragment highlight grey" data-fragment-index="1">console.timeEnd('Вычисления');</span></pre>
 
-<h4>Console:</h4>
-<pre class="javascript">
-<span class="fragment" data-fragment-index="2">&gt; Файлы: <span class="highlight red">167.050ms</span></span>
-<span class="fragment" data-fragment-index="2">&gt; Вычисления: 2.702ms</span>
-</pre>
+    <span class="console">Console:</span>
+    <pre class="javascript"><span class="fragment highlight yellow current-visible" data-fragment-index="2">&gt; Файл: 0.581ms</span>
+<span class="fragment" data-fragment-index="2">&gt; Вычисления: 2.759ms</span></pre>
+</section>
+
+<section class="no-transition">
+    <h4>Медленные операции</h4>
+
+    <pre class="javascript"><span class="highlight grey">console.time('Файл');</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">var data = fs.readFileSync('gang.xml'); // 10 mb</span>
+<span class="highlight grey">console.timeEnd('Файл');</span>
+
+<span class="highlight grey">console.time('Вычисления');</span>
+var moment = robbery.getAppropriateMoment();
+var message = moment.format('%HH:%MM!');
+<span class="highlight grey">console.timeEnd('Вычисления');</span></pre>
+
+<span class="console">Console:</span>
+<pre class="javascript"><span class="fragment highlight yellow current-visible" data-fragment-index="1">&gt; Файл: 5.666ms</span>
+<span class="fragment" data-fragment-index="1">&gt; Вычисления: 2.735ms</span></pre>
+</section>
+
+<section class="no-transition">
+    <h4>Медленные операции</h4>
+
+    <pre class="javascript"><span class="highlight grey">console.time('Файл');</span>
+<span class="fragment highlight yellow init_visible current-visible" data-fragment-index="1">var data = getFileFromNetwork('https://.../gang.json');</span>
+<span class="highlight grey">console.timeEnd('Файл');</span>
+
+<span class="highlight grey">console.time('Вычисления');</span>
+var moment = robbery.getAppropriateMoment();
+var message = moment.format('%HH:%MM!');
+<span class="highlight grey">console.timeEnd('Вычисления');</span></pre>
+
+<span class="console">Console:</span>
+<pre class="javascript"><span class="fragment highlight yellow current-visible" data-fragment-index="1">&gt; Файл: 167.050ms</span>
+<span class="fragment" data-fragment-index="1">&gt; Вычисления: 2.702ms</span></pre>
 </section>
 
 <section><div>
@@ -176,8 +280,8 @@ var message = moment.format('%HH:%MM!');
 </div>
 </section>
 
-<section data-transition="default-in none-out">
-<h4>Блокировка выполнения</h4>
+<section>
+<h4>Поток не блокирован</h4>
 <pre class="javascript">
 console.log('Начинаем');
 
@@ -189,7 +293,7 @@ setInterval(function () {
 
 </pre>
 
-<h4>Console:</h4>
+<span class="console">Console:</span>
 <pre class="javascript">
 <span class="fragment">&gt; Начинаем</span>
 <span class="fragment">&gt; setInterval сработал</span>
@@ -200,8 +304,8 @@ setInterval(function () {
 </pre>
 </section>
 
-<section data-transition="none-in default-out">
-<h4>Блокировка выполнения</h4>
+<section>
+<h4>Поток заблокирован</h4>
 <pre class="javascript">
 console.log('Начинаем');
 
@@ -209,11 +313,11 @@ setInterval(function () {
     console.log('setInterval сработал');
 }, 1000);
 
-<span class="magenta">fs.readFileSync('huge.txt');</span>
+<span class="magenta">fs.readFileSync('bigFile.txt');</span>
 console.log('Файл прочитан');
 </pre>
 
-<h4>Console:</h4>
+<span class="console">Console:</span>
 <pre class="javascript"><span class="fragment">&gt; Начинаем</span>
 <span class="fragment">&gt; ...</span>
 <span class="fragment">&gt; ...</span>
@@ -232,12 +336,12 @@ setInterval(function () {
     console.log('setInterval сработал');
 }, 1000);
 
-<span class="magenta">fs.readFile('huge.txt', function () {
+<span class="magenta">fs.readFile('bigFile.txt', function () {
     console.log('Файл прочитан');
 });</span>
 </pre>
 
-<h4>Console:</h4>
+<span class="console">Console:</span>
 <pre class="javascript"><span class="fragment">&gt; Начинаем</span>
 <span class="fragment">&gt; setInterval сработал</span>
 <span class="fragment">&gt; setInterval сработал</span>
@@ -248,30 +352,19 @@ setInterval(function () {
 </section>
 
 <section>
-    <p><span class="red">Когда писать асинхронный код?</span></p>
+    <a href="http://sameoldmadness.github.io/loupe/?code=CgpzZXRUaW1lb3V0KGZ1bmN0aW9uIHNvcnJ5KCkgewogICAgY29uc29sZS5sb2coJ09ubHkgb25lIHF1ZXN0aW9uIScpOwp9LCAxMDAwKQoKZm9yKHZhciBpID0gMDsgaSA8IDU7IGkrKykge30%3D!!!PGJ1dHRvbj5DbGljayBtZSE8L2J1dHRvbj4%3D">Демо 3</a>
+</section>
+
+<section>
+    <h3>Event loop</h3>
 
     <ul>
-        <li class="fragment">отложенные операции</li>
-        <li class="fragment">работа с вводом-выводом</li>
+        <li>Call Stack</li>
+        <li>APIs</li>
+        <li>Event queue</li>
     </ul>
 </section>
 
-<section>
-    <p><span class="magenta">Как это работает?</span></p>
-</section>
-
-<section>
-    <h4>event loop</h4>
-    <p>=</p>
-    <p>call stack</p>
-    <p>+</p>
-    <p>event queue</p>
-    <p>+</p>
-    <p>APIs</p>
-</section>
-<!-- END: event loop -->
-
-<!-- BEGIN: patterns and tooling -->
 <section>
     <section>
         <h3>Подходы к организации асинхронного кода</h3>
@@ -283,7 +376,7 @@ setInterval(function () {
     <section>
         <h4>callback</h4>
         <pre class="size-XS javascript"><code data-trim>
-fs.readFile('huge.txt', function (err, data) {
+fs.readFile('bigFile.txt', function (err, data) {
     // содержимое файла лежит в
     // переменной data
 });
@@ -309,8 +402,8 @@ function readTwoFiles(cb) {
         if (err) { cb(err); }
         if (otherData) {cb(null, otherData + data);}
         else { otherData = data; }
-    });</code></pre>
-<pre class="size-XS javascript fragment"><code data-trim>}</code></pre>
+    });
+}</code></pre>
     </section>
 
     <section class="no-transition">
@@ -331,8 +424,8 @@ function readTwoFiles(cb) {
         <mark>if (err) { cb(err); }</mark>
         <mark>if (otherData) {cb(null, otherData + data);}</mark>
         <mark>else { otherData = data; }</mark>
-    });</pre>
-<pre class="size-XS javascript">}</pre>
+    });
+}</pre>
     </section>
 
     <section data-background="images/pyramid_of_doom.jpg"></section>
@@ -355,8 +448,8 @@ function readTwoFiles(cb) {
         if (err) { <mark>cb(err);</mark> }
         if (otherData) {<mark>cb(null, otherData + data);</mark>}
         else { otherData = data; }
-    });</pre>
-<pre class="size-XS javascript">}</pre>
+    });
+}</pre>
     </section>
 
     <section class="no-transition">
@@ -377,8 +470,8 @@ function readTwoFiles(cb) {
         <mark>if (err) { cb(err); }</mark>
         if (otherData) {cb(null, otherData + data);}
         else { otherData = data; }
-    });</pre>
-<pre class="size-XS javascript">}</pre>
+    });
+}</pre>
     </section>
 
     <section class="no-transition">
@@ -399,8 +492,8 @@ function readTwoFiles(cb) {
         if (err) { cb(err); }
         if (otherData) {cb(null, otherData + data);}
         else { otherData = data; }
-    });</pre>
-<pre class="size-XS javascript">}</pre>
+    });
+}</pre>
     </section>
 
     <section class="no-transition">
@@ -421,8 +514,8 @@ function readTwoFiles(cb) {
         if (err) { cb(err); }
         if (otherData) {cb(null, otherData + data);}
         else { <mark>otherData = data;</mark> }
-    });</pre>
-<pre class="size-XS javascript">}</pre>
+    });
+}</pre>
     </section>
 
     <section class="no-transition">
@@ -443,8 +536,8 @@ function readTwoFiles(cb) {
         if (err) { cb(err); }
         if (otherData) {cb(null, otherData + data);}
         else { otherData = data; }
-    });</pre>
-<pre class="size-XS javascript">}</pre>
+    });
+}</pre>
         <p class="green fragment">Запускаем и работает :-)</p>
     </section>
 
@@ -499,21 +592,16 @@ function readTwoFiles(cb) {
     </section>
 
     <section class="no-transition">
-        <h4><span class="grey">promises.</span> Фабрика промисов</h4>
-        <pre class="size-XS javascript"><code>function readFile(filename){
-    return new Promise(function (fulfill, reject){
-        fs.readFile(filename, function (err, data){
-            if (err) { reject(err); }
-            else { fulfill(data); }
-        });
-    });
-}</code></pre>
+        <h4><span class="grey">promises.</span> Bluebird</h4>
+
+        <pre class ="size-XS javascript"><code>var promisify = require('bluebird').promisify;</code></pre>
+
+        <pre class ="size-XS javascript fragment"><code>var one = promisify(fs.readFile.bind(fs, 'one.txt'));</code></pre>
     </section>
 
     <section class="no-transition">
         <h4><span class="grey">promises.</span> Запуск</h4>
-        <pre class="size-XS javascript"><code>var myPromise = readFile('one.txt');</code></pre>
-        <pre class="size-XS javascript fragment"><code>myPromise()
+        <pre class="size-XS javascript"><code>myPromise()
     .then(function onSuccess() { ... },
           function onRejected() { ... })</code></pre>
 
@@ -538,14 +626,16 @@ function readTwoFiles(cb) {
 
     <section class="no-transition">
         <h4><span class="grey">promises.</span> Синхронно</h4>
-        <pre class="size-XS javascript fragment"><code>var firstPromise = readFile('one.txt');
-var secondPromise = readFile('two.txt');</code></pre>
+        <pre class="size-XS javascript fragment"><code>var promisify = require('bluebird').promisify;
+
+var one = promisify(fs.readFile.bind(fs, 'one.txt'));
+var two = promisify(fs.readFile.bind(fs, 'two.txt'));</code></pre>
 
         <pre class="size-XS javascript fragment"><code>var first;
-firstPromise
+one()
     .then(function (data) {
         first = data;
-        return secondPromise;
+        return two();
     })
     .then(function (data) {
         console.log(first + data);
@@ -563,12 +653,14 @@ firstPromise
 
     <section class="no-transition">
         <h4><span class="grey">promises.</span> Асинхронно</h4>
-        <pre class="size-XS javascript fragment"><code>var firstPromise = readFile('one.txt');
-var secondPromise = readFile('two.txt');</code></pre>
+        <pre class="size-XS javascript fragment"><code>var promisify = require('bluebird').promisify;
+
+var one = promisify(fs.readFile.bind(fs, 'one.txt'));
+var two = promisify(fs.readFile.bind(fs, 'two.txt'));</code></pre>
 
         <pre class="size-XS javascript fragment"><code>Promise.all([
-        firstPromise,
-        secondPromise
+        one(),
+        two()
     ])
     .then(function (data) {
         console.log(data[0] + data[1]);
@@ -592,11 +684,15 @@ var secondPromise = readFile('two.txt');</code></pre>
 
     <section class="no-transition">
         <h4>async await</h4>
+        <pre class ="size-XS javascript"><code>var promisify = require('bluebird').promisify;
+
+var one = promisify(fs.readFile.bind(fs, 'one.txt'));
+var two = promisify(fs.readFile.bind(fs, 'two.txt'));</code></pre>
 
         <pre class ="size-XS javascript fragment"><code>async function readTwoFiles() {
     console.log(
-        await firstPromise +
-        await secondPromise);
+        await one() +
+        await two());
 }</code></pre>
     </section>
 </section>
@@ -613,55 +709,37 @@ var secondPromise = readFile('two.txt');</code></pre>
     </section>
 
     <section>
-        [In progress...]
+        <h3>generators</h3>
+
+        <pre class ="size-XS javascript"><code>var promisify = require('bluebird').promisify;
+
+var one = promisify(fs.readFile.bind(fs, 'one.txt'));
+var two = promisify(fs.readFile.bind(fs, 'two.txt'));</code></pre>
+
+<pre class ="size-XS javascript fragment"><code>function *myGenerator() {
+    var data = yield [one(), two()];
+    console.log(data[0] + data[1]);
+};</code></pre>
+
+<pre class ="size-XS javascript fragment"><code>var co = require('co');
+co(myGenerator);</code></pre>
+
     </section>
-</section>
 
-<!-- by @zhigalov -->
-
-<!-- END: patterns and tooling -->
-
-<!-- BEGIN: parallelism -->
-
-<section>
-<h4>Параллельное выполнение</h4>
 </section>
 
 <section>
-<h4>node.js: child_process</h4>
-<pre class="javascript">
-<span class="fragment highlight yellow init_visible current-visible">var exec = require('child_process').exec;</span>
-<span class="fragment highlight yellow init_visible current-visible">var child = exec('node ./child.js');</span>
-
-<span class="fragment highlight yellow init_visible current-visible">child.stdout.on('data', function(data) {
-    console.log('stdout: ' + data);
-});</span>
-
-<span class="fragment highlight yellow init_visible current-visible">child.stdin.write("Hello there!");</span>
-</pre>
+    <h2>Домашечка</h2>
+    <a class="fragment" href="https://github.com/urfu-2015/javascript-tasks-9">github.com/urfu-2015/javascript-tasks-9</a>
+    <br><br><br>
+    <p style="text-align: center" class="fragment deadline">Deadline<br> 1 декабря<br>02:59:59.999</p>
 </section>
-
-<section>
-<h4>браузер: Web Workers</h4>
-<pre class="javascript">
-<span class="fragment highlight yellow init_visible current-visible">var myWorker = new Worker("worker.js");</span>
-
-<span class="fragment highlight yellow init_visible current-visible">myWorker.onmessage = function(e) {
-    result.textContent = e.data;
-    console.log('Message received from worker');
-}</span>
-
-<span class="fragment highlight yellow init_visible current-visible">myWorker.postMessage([first.value,second.value]);</span>
-</pre>
-</section>
-
-<!-- END: parallelism -->
 
 <script src="../lib/js/head.min.js"></script>
 <script src="../js/reveal.js"></script>
 <script>
     Reveal.initialize({
-        controls: false,
+        controls: true,
         progress: true,
         slideNumber: true,
         history: true,

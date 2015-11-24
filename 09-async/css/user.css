@@ -88,8 +88,9 @@ pre.size-XXS {
     color: #a0a0f0 !important;
 }
 
-.grey {
-    color: #777;
+.grey,
+.highlight.fragment.visible.grey {
+    color: #999;
 }
 
 .hljs-comment {
@@ -138,4 +139,17 @@ section pre.javascript {
     background: #3F3F3F;
     padding: 5px;
     width: auto !important;
+}
+
+section span.console {
+    font-family: monospace;
+    font-size: 34px;
+    display: block;
+    margin-bottom: -20px;
+    text-align: left;
+}
+
+.reveal .slides section .fragment {
+    -webkit-transition: none;
+    transition: none;
 }

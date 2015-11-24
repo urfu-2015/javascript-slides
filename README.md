@@ -11,3 +11,4 @@
 6. [objects](https://rawgit.com/urfu-2015/javascript-slides/master/06-objects/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-6))
 7. [Прототипы](https://rawgit.com/urfu-2015/javascript-slides/master/07-prototypes/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-7))
 8. [Конструкторы](https://rawgit.com/urfu-2015/javascript-slides/master/08-constructors/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-8))
+9. [Асинхронность](https://rawgit.com/urfu-2015/javascript-slides/master/09-async/index.html#/) ([Домашнее задание](https://github.com/urfu-2015/javascript-tasks-9))
