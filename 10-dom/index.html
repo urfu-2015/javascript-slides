@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>JavaScript, DOM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="../css/reveal.css">
+    <link rel="stylesheet" href="../css/theme/yandex.css" id="theme">
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+    <link rel="stylesheet" href="./css/user.css">
+</head>
+<body class="yandex"><div class="reveal"><div class="slides">
+
+<section class="large">
+    <h2>DOM</h2>
+    <p class="author"><small>Мангин Александр</small></p>
+</section>
+
+<section>
+    <h4>Провакационный вопрос.</h4>
+    <h5 class="fragment" data-fragment-index="0">Зачем нужен JS?</h5>
+</section>
+
+<section>
+    <h4>Оглянемся назад...</h4>
+    <ul class="fragment" data-fragment-index="0">
+        <li>Мигающая реклама</li>
+        <li class="fragment" data-fragment-index="1">Скрытие элементов</li>
+        <li class="fragment" data-fragment-index="2">И другие мелочи...</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Сейчас</h4>
+    <ul class="fragment" data-fragment-index="0">
+        <li>Исполнения кода не только в браузере</li>
+        <li class="fragment" data-fragment-index="1">Запуск js на сервере</li>
+        <li class="fragment" data-fragment-index="2">Firefox Os</li>
+        <li class="fragment" data-fragment-index="3">Phonegap</li>
+        <li class="fragment" data-fragment-index="4">...</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Но какая основная цель JS?</h4>
+    <h5 class="fragment" data-fragment-index="0">Создание динамических страниц.</h5>
+</section>
+
+<section>
+    <h4>Сегодня в лекции:</h4>
+    <ul class="fragment" data-fragment-index="0">
+        <li>Запуск кода в браузере</li>
+        <li class="fragment" data-fragment-index="1">Что такое DOM?</li>
+        <li class="fragment" data-fragment-index="2">Как искать что-то в html-документе?</li>
+        <li class="fragment" data-fragment-index="3">Как извлекать информацию из html-документа?</li>
+        <li class="fragment" data-fragment-index="4">Как изменить html-документ?</li>
+        <li class="fragment" data-fragment-index="5">Как реагировать на действия пользователя?</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Запуск кода в браузере</h4>
+    <ul>
+        <li class="fragment" data-fragment-index="0">Через консоль разработчика</li>
+        <li class="fragment" data-fragment-index="1">Через сервисы-песочницы</li>
+        <li class="fragment" data-fragment-index="2">Через html-документ</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Через консоль разработки</h4>
+    <ul>
+        <li class="fragment" data-fragment-index="0">Запускаем Яндекс.Браузер</li>
+        <li class="fragment" data-fragment-index="1">Идем в Settings</li>
+        <li class="fragment" data-fragment-index="2">Идем в Advanced</li>
+        <li class="fragment" data-fragment-index="3">Идем в More Tools</li>
+        <li class="fragment" data-fragment-index="4">Идем в Developer Tools</li>
+        <li class="fragment" data-fragment-index="5">Затем идем в таб Console</li>
+        <li class="fragment" data-fragment-index="6">Пишем в строке код 2+2</li>
+        <li class="fragment" data-fragment-index="7">Жмем enter // 4</li>
+    </ul>
+
+    <div class="fragment" data-fragment-index="8">
+        P.S. Для запуска Developer Tools есть хоткей
+    </div>
+</section>
+
+<section>
+    <h4>Через сервис песочницу</h4>
+    <ul>
+        <li class="fragment" data-fragment-index="0">Выбираем сервис песочницу...</li>
+        <li class="fragment" data-fragment-index="1">Идем на сайт jsfiddle.net</li>
+        <li class="fragment" data-fragment-index="2">Во вкладке js пишем: console.log(2+2)</li>
+        <li class="fragment" data-fragment-index="3">Жмем кнопку run</li>
+        <li class="fragment" data-fragment-index="4">Идем в Developer tools</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Запуск кода через html-документ</h4>
+            <pre><code class="html">
+&lt;html&gt;
+    &lt;body&gt;
+        ваша верстка
+        &lt;scrip src='app.js'&gt;&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+            </code></pre>
+</section>
+
+<section>
+    <h4>DOM(Document object model)</h4>
+</section>
+
+<section>
+    <h4>Что такое DOM?</h4>
+    <ul>
+        <li class="fragment" data-fragment-index="0">для браузера</li>
+        <li class="fragment" data-fragment-index="1">для разработчика</li>
+    </ul>
+</section>
+
+<section>
+    <h4>DOM для браузера</h4>
+    <pre><code>
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;form&gt;
+      &lt;input type=&#39;text&#39; placeholder=&#39;Имя&#39;/&gt;
+      &lt;input type=&#39;text&#39; placeholder=&#39;Фамилия&#39;/&gt;
+      &lt;button&gt;Отправить&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+    </code></pre>
+</section>
+
+<section>
+    <h4>Узел(Node)</h4>
+    <ol>
+        <li class="fragment" data-fragment-index="0">Тип узла</li>
+        <li class="fragment" data-fragment-index="1">Набор атрибутов</li>
+        <li class="fragment" data-fragment-index="2">Ссылка на левого/правого соседа</li>
+        <li class="fragment" data-fragment-index="3">Ссылка на родительский узел</li>
+        <li class="fragment" data-fragment-index="4">Ссылка на массив &#39;детей&#39;</li>
+    </ol>
+</section>
+
+<section>
+    <h4>Типы узлов</h4>
+    <ol>
+        <li class="fragment" data-fragment-index="0">ELEMENT_NODE - элемент</li>
+        <li class="fragment" data-fragment-index="1">TEXT_NODE - текст</li>
+        <li class="fragment" data-fragment-index="2">COMMENT_NODE - комментарий</li>
+        <li class="fragment" data-fragment-index="3">DOCUMENT_NODE - документ</li>
+        <li class="fragment" data-fragment-index="4">DOCUMENT_TYPE_DODE - doctype</li>
+        <li class="fragment" data-fragment-index="5">DOCUMENT_FRAGMENT_NODE - фрагмент</li>
+    </ol>
+</section>
+
+<section>
+    <h4>Сколько узлов?</h4>
+    <pre><code>
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;form&gt;
+      &lt;input type=&#39;text&#39; placeholder=&#39;Имя&#39;/&gt;
+      &lt;input type=&#39;text&#39; placeholder=&#39;Фамилия&#39;/&gt;
+      &lt;button&gt;Отправить&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+    </code></pre>
+    <ul class="fragment" data-fragment-index="0">
+        <li>6 - элементов</li>
+        <li>1 - текст</li>
+    </ul>
+    <ul class="fragment" data-fragment-index="1">
+        <li>6 - элементов</li>
+        <li>1 + 8 - текст</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Что помнит DOM?</h4>
+    <ol>
+        <li class="fragment" data-fragment-index="0">Содержимое элементов</li>
+        <li class="fragment" data-fragment-index="1">Положение элементов</li>
+        <li class="fragment" data-fragment-index="2">Переводы строк</li>
+        <li class="fragment" data-fragment-index="3">Комментарии</li>
+    </ol>
+</section>
+
+<section>
+    <h4>Минификация DOM</h4>
+    <pre><code>
+&lt;html&gt;&lt;body&gt;&lt;form&gt;&lt;input type=&#39;text&#39; placehol...
+    </code></pre>
+    <ul class="fragment" data-fragment-index="0">
+        <li>Экономия трафика</li>
+        <li>Меньший размер DOM</li>
+        <li>Более очевидные левые и правые соседи</li>
+    </ul>
+</section>
+
+<section>
+    <h4>DOM для разработчика</h4>
+    <h5 class="fragment" data-fragment-index="0">это API</h5>
+    <ol class="fragment" data-fragment-index="1">
+        <li>Поиск по документу</li>
+        <li>Чтение данных из документа</li>
+        <li>Изменение документа</li>
+        <li>Реакция на действия пользователя</li>
+    </ol>
+</section>
+
+<section>
+    <h4>Поиск в DOM</h4>
+</section>
+
+<section>
+    <h4>Точка входа</h4>
+    <pre><code class="fragment javascript" data-fragment-index="0">
+window.document; // document
+document.nodeType === document.DOCUMENT_NODE;
+    </code></pre>
+</section>
+
+<section>
+    <h4>Поиск в DOM</h4>
+    <pre><code class="html">&lt;html&gt;
+  &lt;body&gt;
+    &lt;form&gt;
+      &lt;input type=&#39;text&#39; placeholder=&#39;Имя&#39;/&gt;
+      &lt;input type=&#39;text&#39; placeholder=&#39;Фамилия&#39;/&gt;
+      &lt;button&gt;Отправить&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+    </code></pre>
+</section>
+
+<section>
+    <h4>Поиск по ID</h4>
+    <pre><code class="html">&lt;html&gt;
+ &lt;body&gt;
+  &lt;form id='form'&gt;
+   &lt;input id='name' type=&#39;text&#39;/&gt;
+   &lt;input id='surname' type=&#39;text&#39;/&gt;
+   &lt;button id='submit'&gt;Отправить&lt;/button&gt;
+  &lt;/form&gt;
+ &lt;/body&gt;
+&lt;/html&gt;
+    </code></pre>
+    <pre class="fragment"><code class="javascript">
+var form = document.getElementById('form');
+var name = document.getElementById('name');
+    </code></pre>
+</section>
+
+<section>
+    <h4>Плюсы/Минусы</h4>
+    <ul>
+        <li>(+-)Подходит для поиска уникальных элементов</li>
+        <li>(+)Очень быстрый</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Поиск по тэгам</h4>
+    <pre><code>&lt;html&gt;
+  &lt;body&gt;
+    &lt;form id='form'&gt;
+      &lt;input type=&#39;text&#39; placeholder=&#39;Имя&#39;/&gt;
+      &lt;input type=&#39;text&#39; placeholder=&#39;Фамилия&#39;/&gt;
+      &lt;button&gt;Отправить&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <pre class="fragment"><code>var forms = document.getElementsByTagName('form');
+var inputs = document.getElementsByTagName('input');</code></pre>
+</section>
+
+<section>
+    <h4>Плюсы/Минусы</h4>
+    <ul>
+        <li>(+) Поиск пачкой</li>
+        <li>(-) Метод медленнее, чем getElementById</li>
+        <li>(-) Редко нужно искать по тэгам</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Поиск по классу</h4>
+    <pre><code class="html">&lt;html&gt;
+  &lt;body&gt;
+    &lt;form class='person-form'&gt;
+      &lt;input class='name' type=&#39;text&#39;/&gt;
+      &lt;input class='surname' type=&#39;text&#39;/&gt;
+      &lt;button class='submit'&gt;Отправить&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <pre class="fragment"><code class="javascript">var formName = document
+  .getElementsByClassName('name')[0];
+
+formName.value = 'Alex';</code></pre>
+</section>
+
+<section>
+    <h4>Плюсы/Минусы</h4>
+    <ul>
+        <li>(+) Довольно гибкий</li>
+        <li>(+) Можно искать пачкой</li>
+        <li>(-) Метод медленнее, чем getElementById</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Поиск по css-селектору</h4>
+    <pre><code class="html">&lt;html&gt;
+  &lt;body&gt;
+    &lt;form class='person-form'&gt;
+      &lt;input class='name' type=&#39;text&#39;/&gt;
+      &lt;input class='surname' type=&#39;text&#39;/&gt;
+      &lt;button class='submit'&gt;Отправить&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <pre class="fragment"><code>var formName = document
+    .querySelector('.form .name');
+var formInputs = document
+    .querySelectorAll('.form input');</code></pre>
+</section>
+
+<section>
+    <h4>Плюсы/Минусы</h4>
+    <ul>
+        <li>(++) Самый гибкий спосооб</li>
+        <li>(-) Самый медленный способ</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Поиск. Примеры.</h4>
+
+    <a class="fragment" data-fragment-index="0" href="./examples/search/index.html">Пример</a>
+</section>
+
+<section>
+    <h4>Поиск в контексте</h4>
+
+    <a class="fragment" data-fragment-index="0" href="./examples/relative-search/index.html">Пример</a>
+</section>
+
+<section>
+    <h4>NodeList/HTMLCollection</h4>
+    <h5 class="fragment" data-fragment-index="0">В чем разница?</h5>
+
+    <ul>
+        <li class="fragment" data-fragment-index="1">NodeList - может содержать произвольные узлы</li>
+        <li class="fragment" data-fragment-index="2">HTMLCollection - может содержать только элементы</li>
+        <li class="fragment" data-fragment-index="3">HTMLCollection - live-collection</li>
+        <li class="fragment" data-fragment-index="4">NodeList - бывает live-collection</li>
+    </ul>
+</section>
+
+<section>
+    <h4>live-collection</h4>
+    <ul>
+        <li class="fragment" data-fragment-index="0">Помнит 'запрос'</li>
+        <li class="fragment" data-fragment-index="1">Кэширует поиск до изменения DOM</li>
+        <li class="fragment" data-fragment-index="2">Автоматически обновляется при изменении DOM</li>
+        <li class="fragment" data-fragment-index="3">Не содержит методов массива</li>
+    </ul>
+    <a class="fragment" data-fragment-index="4" href="./examples/live-collection/index.html">Пример</a>
+</section>
+
+<section>
+    <h4>live-collection -> array</h4>
+    <pre><code class="javascript">
+var inputs = document.querySelectorAll('input');
+inputs = [].slice.call(inputs);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Относительный поиск в DOM</h4>
+</section>
+
+<section>
+    <h4>Поиск по элементам vs поиск по узлам</h4>
+    <pre><code class="html">
+&lt;button&gt;&lt;/button&gt; &lt;button&gt;&lt;/button&gt;
+    </code></pre>
+</section>
+
+<section>
+    <h4>Поиск соседей</h4>
+    <pre><code class="html">
+&lt;button&gt;&lt;/button&gt; &lt;button&gt;&lt;/button&gt;
+    </code></pre>
+    <pre><code class="javascript">
+var button = document.querySelector();
+
+var nextButton = button.nextElementSibling;
+var prevButton = button.previousElementSibling;
+    </code></pre>
+</section>
+
+<section>
+    <h4>Поиск соседей</h4>
+    <pre><code class="html">
+&lt;button&gt;&lt;/button&gt; &lt;button&gt;&lt;/button&gt;
+    </code></pre>
+    <pre><code class="javascript">
+var button = document.querySelector();
+
+var nextText = button.nextSibling;
+var prevButton = button.previousSibling;
+    </code></pre>
+</section>
+
+<section>
+    <h4>Поиск ближайшего отца</h4>
+    <pre><code class="html">
+&lt;form&gt;&lt;button&gt;&lt;/button&gt;&lt;/form&gt;
+    </code></pre>
+    <pre class="fragment"><code class="javascript">var button = document.querySelector('button');
+
+var form = button.parentElement;
+// button.parentNode;</code></pre>
+</section>
+
+<section>
+    <h4>Поиск конекретного отца</h4>
+    <pre><code class="html">
+&lt;form&gt;
+    &lt;button&gt;
+        &lt;span&gt; Купить &lt;/span&gt;
+    &lt;/button&gt;
+&lt;/form&gt;
+    </code></pre>
+    <pre class="fragment"><code class="javascript">var span = document.querySelector('span');
+
+var form = span.closest('form');</code></pre>
+</section>
+
+<section>
+    <h4>Поиск детей</h4>
+    <pre><code class="javascript">
+var body = document.body;
+
+var first = body.firstElementChild; // firstChild
+var last = body.lastElementChild; // lastChild
+var children = body.children; // childNodes
+    </code></pre>
+</section>
+
+<section>
+    <h4>Matches</h4>
+    <pre><code class="html">
+&lt;form&gt;
+    &lt;button class='name'&gt;
+        &lt;span&gt; Купить &lt;/span&gt;
+    &lt;/button&gt;
+&lt;/form&gt;
+    </code></pre>
+    <pre class="fragment"><code class="javascript">
+var button = document.querySelector('button');
+
+button.matches('button.name'); // true
+button.matches('button.surname'); // false
+    </code></pre>
+</section>
+
+<section>
+    <h4>Работа с аттрибутами</h4>
+    <ul>
+        <li class="fragment" data-fragment-index="0">настройка нативных контролов</li>
+        <li class="fragment" data-fragment-index="1">передача данных на клиент</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Чтение аттрибутов</h4>
+    <pre><code class="html">
+&lt;a href='yandex.ru' class='name'&gt;Купить&lt;/a&gt;
+    </code></pre>
+    <pre class="fragment" data-fragment-index="0"><code class="javascript">var button = document.querySelector('button');
+
+button.getAttribute('href'); // 'yandex.ru'</code></pre>
+</section>
+
+<section>
+    <h4>Изменение аттрибутов</h4>
+    <pre><code class="html">
+&lt;a class='name'&gt;Купить&lt;/a&gt;
+    </code></pre>
+    <pre class="fragment"><code class="javascript">var button = document.querySelector('a');
+
+button.setAttribute('href', 'yandex.ru');</code></pre>
+</section>
+
+<section>
+    <h4>Удаление аттрибутов</h4>
+    <pre><code class="html">
+&lt;a class='name'&gt;Купить&lt;/a&gt;
+    </code></pre>
+    <pre class="fragment"><code class="javascript">
+var button = document.querySelector('a');
+
+button.removeAttribute('href');
+    </code></pre>
+</section>
+
+<section>
+    <h4>свойства vs аттрибуты</h4>
+    <pre><code class="html">
+&lt;input class='name'/&gt;
+    </code></pre>
+    <pre class="fragment"><code class="javascript">
+var name = document.querySelector('input');
+
+name.placeholder;
+name.className;
+name.id;
+    </code></pre>
+</section>
+
+<section>
+    <h4>Важные свойства и аттрибуты</h4>
+    <ul>
+        <li>id</li>
+        <li>className/class</li>
+        <li>style</li>
+        <li>value</li>
+        <li>href</li>
+        <li>и другие</li>
+    </ul>
+</section>
+
+    <section>
+        <h4>Пользовательские аттрибуты</h4>
+    <pre><code class="html">
+&lt;div data-serve-time='2015/09/01'&gt;&lt;/div&gt;
+    </code></pre>
+
+    <pre class="fragment"><code class="javascript">var div = document.querySelector('div');
+
+div.dataset.serverTime;</code></pre>
+    </section>
+
+<section>
+    <h4>Пользовательские аттрибуты</h4>
+
+    <a class="fragment" data-fragment-index="0" href="./examples/dataset/index.html">Пример</a>
+</section>
+
+<section>
+    <h4>Измененеие class</h4>
+    <ul>
+        <li class="fragment" data-fragment-index="0">Изменение аттрибута</li>
+        <li class="fragment" data-fragment-index="1">Изменение свойства</li>
+        <li class="fragment" data-fragment-index="2">Работа с classList</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Измененеие аттрибута class</h4>
+    <pre><code class="javascript">
+var track = document.querySelector('.track');
+
+track.setAttribute('class', 'track selected');
+    </code></pre>
+</section>
+
+<section>
+    <h4>Измененеие свойства class</h4>
+    <pre><code class="javascript">
+var track = document.querySelector('.track');
+
+track.className = 'track selected';
+    </code></pre>
+</section>
+
+<section>
+    <h4>Работа с ClassList</h4>
+</section>
+
+<section>
+    <h4>Добавление class</h4>
+    <pre><code class="javascript">
+var track = document.querySelector('.track');
+
+track.classList.add('selected');
+track.className; // 'track selected'
+    </code></pre>
+</section>
+
+<section>
+    <h4>Удаление class</h4>
+    <pre><code class="javascript">
+var track = document.querySelector('.track');
+
+track.classList.remove('selected');
+track.className; // 'track'
+    </code></pre>
+</section>
+
+<section>
+    <h4>Замена class</h4>
+    <pre><code class="javascript">
+var track = document.querySelector('.track');
+
+track.classList.toggle('selected', 'removed');
+track.className; // 'track removed'
+    </code></pre>
+</section>
+
+<section>
+    <h4>Изменение DOM</h4>
+</section>
+
+<section>
+    <h4>Создание новых элементов</h4>
+    <pre><code>
+var track = document.createElement('div');
+
+track.className = 'track';
+    </code></pre>
+</section>
+
+<section>
+    <h4>Создание текста</h4>
+    <pre><code>
+var text = document.createTextNode('Послушать');
+    </code></pre>
+</section>
+
+<section>
+    <h4>Добавление элемента</h4>
+    <h5>Способ 1.</h5>
+    <pre><code class="javascript">
+var trackList = document
+    .querySelector('.trackList');
+
+var track = document.createElement('div');
+var text = document.createTextNode('Послушать');
+
+track.appendChild(text);
+trackList.appendChild(track);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Добавление элемента</h4>
+    <h5>Способ 2.</h5>
+    <pre><code class="javascript">
+var trackList = document
+    .querySelector('.trackList');
+
+var track = document.createElement('div');
+var label = document.createElement('div')
+var duration = document.createElement('div');
+
+track.appendChild(duration);
+track.insertBefore(label, duration);
+trackList.appendChild(track);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Добавление элемента</h4>
+    <h5>Способ 3.</h5>
+    <pre><code class="javascript">
+var trackList = document
+    .querySelector('.trackList');
+var lastTrack = trackList.lastElementChild;
+
+var track = document.createElement('div');
+var label = document.createElement('div')
+var duration = document.createElement('div');
+
+track.appendChild(duration);
+track.insertBefore(label, duration);
+trackList.replaceChild(lastTrack, track);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Добавление элемента</h4>
+    <h5>Способ 4.</h5>
+    <pre><code class="javascript">
+var container = document
+    .querySelector('.trackList');
+
+container.innerHTML = '&lt;div class="track"&gt;&lt;/div&gt;';
+    </code></pre>
+</section>
+
+<section>
+    <h4>Добавление элемента</h4>
+    <h5>Способ 5.</h5>
+    <pre><code class="javascript">
+var container = document
+    .querySelector('.trackList');
+
+container.innerText = 'Какой-то текст';
+    </code></pre>
+</section>
+
+<section>
+    <h4>Добавление элемента</h4>
+    <h5>Способ 6.</h5>
+    <ul>
+        <li>Идем на сайт garann.github.io/template-chooser/</li>
+        <li>Выбираем шаблонизатор</li>
+        <li>И пользуемся</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Добавление элемента</h4>
+    <h5>Способ 7.</h5>
+    <p>Пишем свой шаблонизатор!</p>
+</section>
+
+<section>
+    <h4>Удаление элемента</h4>
+    <pre><code>
+var trackList = document
+    .querySelector('.trackList');
+
+trackLIst.parentElement.removeChild(trackList);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Добавление нескольких элементов</h4>
+</section>
+
+<section>
+    <h4>Добавление нескольких элементов</h4>
+    <h5>Способ 1</h5>
+    <pre><code class="javascript">
+var trackList = document
+    .querySelector('.trackList');
+
+for(var i =0; i < 10; i++) {
+  var track = document.createElement('a');
+  trackList.appendChild(track);
+}
+    </code></pre>
+</section>
+
+<section>
+    <h4>Добавление нескольких элементов</h4>
+    <h5>Способ 2</h5>
+    <pre><code class="javascript">
+var trackList = document.querySelector('.trackList');
+var container = document.createElement('div');
+
+for(var i =0; i < 10; i ++) {
+  var track = document.createElement('a');
+  container.appendChild(track);
+}
+
+trackList.appendChild(container);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Добавление нескольких элементов</h4>
+    <h5>Способ 3</h5>
+    <pre><code class="javascript">
+var trackList = document.querySelector('.trackList');
+var container = document.createDocumentFragment();
+
+for(var i =0; i < 10; i ++) {
+  var track = document.createElement('a');
+  container.appendChild(track);
+}
+trackList.appendChild(container);
+    </code></pre>
+</section>
+
+<section>
+    <h4>События</h4>
+    <ul class="fragment" data-fragment-index="0">
+        <li>Клик по элементу</li>
+        <li>Скролл</li>
+        <li>Ввод</li>
+        <li>Нажатие клавиши</li>
+        <li>...</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Подписка на события</h4>
+</section>
+
+<section>
+    <h4>Подписка на события через аттрибут</h4>
+
+    <pre><code>
+&lt;a class='name' onclick=buy()&gt;Купить&lt;/a&gt;
+    </code></pre>
+
+    <pre><code>
+function buy() {
+    console.log('Купить!');
+}
+    </code></pre>
+</section>
+
+<section>
+    <h4>Подписка на события через свойство</h4>
+
+    <pre><code>
+&lt;a class='buy'&gt;Купить&lt;/a&gt;
+    </code></pre>
+
+    <pre><code>
+var buyButton = document.querySelector('.buy');
+
+buyButton.onclick = function () {
+    console.log('Купить!');
+}
+    </code></pre>
+</section>
+
+<section>
+    <h4>Подписка на события через addEventListener</h4>
+
+    <pre><code>
+&lt;a class='buy'&gt;Купить&lt;/a&gt;
+    </code></pre>
+
+    <pre><code>
+var buyButton = document.querySelector('.buy');
+
+buyButton.addEventLister('click', function () {
+    console.log('Купить!');
+}, false);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Отписка от событий через removeEventListener</h4>
+
+    <pre><code>
+&lt;a class='buy'&gt;Купить&lt;/a&gt;
+    </code></pre>
+
+    <pre><code>
+var buyButton = document.querySelector('.buy');
+var handler = function () {
+    console.log('Купить!');
+}
+
+buyButton.addEventLister('click', handler, false);
+// что-то делаем
+buyButton.removeEventLister('click', handler, false);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Объект event</h4>
+
+    <ul>
+        <li>target</li>
+        <li>currentTarget</li>
+        <li>type</li>
+        <li>и другие</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Механизм обработки событий</h4>
+
+    <ul style="font-size: 70%;">
+        <li>Кто-то создал событие</li>
+        <li>Берем спискок родителей</li>
+        <li>Начинаем стадию захвата</li>
+        <li>Бежим в цикле по родителям начиная с самого дальнего</li>
+        <li> - Вызываем обработчики, которые подписаны на стадию захвата</li>
+        <li>Начинаем стадию цели</li>
+        <li>Вызываем все обработчики, которые подписаны не важно на какую стадию</li>
+        <li>Начинаем стадию всплытия</li>
+        <li>Бежим в цикле по родителям начиная с самого ближнего</li>
+        <li> - Вызываем обработчики, которые подписаны на стадию всплытия</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Пример с квадратами</h4>
+    <a class="fragment" data-fragment-index="0" href="./examples/search/index.html">Пример</a>
+</section>
+
+<section>
+    <h4>Остановка распространения события</h4>
+    <pre><code>
+&lt;div class='container'&gt;
+    &lt;a class='buy'&gt;Купить&lt;/a&gt;
+&lt;/div&gt;
+    </code></pre>
+    <pre><code>
+var container = document.querySelector('.container');
+var buyButton = document.querySelector('.buyButton');
+
+buyButton.addEventListener('click', function (e) {
+    console.log('buy!');
+    e.stopPropagation();
+}, false);
+
+container.addEventListener('click', function () {
+    console.log('click  по контейнеру');
+}, false);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Отмена нативного поведения</h4>
+    <pre><code>
+&lt;a href='yandex.ru' class='buy'&gt;Купить&lt;/a&gt;
+    </code></pre>
+    <pre><code>
+var buyButton = document.querySelector('.buy');
+
+buyButton.addEventListener('click', function (e) {
+    console.log('buy!');
+    e.preventDefault();
+}, false);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Делегирование событий</h4>
+</section>
+
+<section>
+    <h4>Делегирование событий</h4>
+    <ul>
+        <li>Найти родителя</li>
+        <li>Подписаться на нужное событие</li>
+        <li>В обработчике отсеять лишнии элементы</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Делегирование событий</h4>
+    <pre><code>
+&lt;div class='container'&gt;
+    &lt;a class='buy'&gt;Купить&lt;/a&gt;
+    &lt;a class='buy'&gt;Купить&lt;/a&gt;
+    &lt;a class='buy'&gt;Купить&lt;/a&gt;
+&lt;/div&gt;
+    </code></pre>
+
+    <pre><code>
+var container = document.querySelector('.container');
+container.addEventListener('click', function (e) {
+    if (e.target.className !== 'buy') {
+        return;
+    }
+    console.log('buy!');
+}, false);
+    </code></pre>
+</section>
+
+<section>
+    <h4>Делегирование событий</h4>
+<pre><code>
+    &lt;div class='container'&gt;
+    &lt;a class='buy'&gt;&lt;span&gt;Купить&lt;/span&gt;&lt;/a&gt;
+    &lt;a class='buy'&gt;&lt;span&gt;Купить&lt;/span&gt;&lt;/a&gt;
+    &lt;a class='buy'&gt;&lt;span&gt;Купить&lt;/span&gt;&lt;/a&gt;
+    &lt;/div&gt;
+</code></pre>
+
+<pre><code>
+var container = document.querySelector('.container');
+container.addEventListener('click', function (e) {
+    if (!e.target.closest('.buy')) {
+      return;
+    }
+    console.log('buy!');
+}, false);
+</code></pre>
+</section>
+
+<section>
+    <h4>Делегирование событий +-</h4>
+    <ul>
+        <li>Не надо отписываться от события</li>
+        <li>На надо подписывать на события</li>
+        <li>Один подписчик</li>
+        <li>Инициализацияи приложение происходит чуть быстрее</li>
+        <li>Обработчик становится сложнее</li>
+    </ul>
+</section>
+
+<section>
+    <h4>Домашнее задание.</h4>
+</section>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.js"></script>
+<script>
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        slideNumber: true,
+        history: true,
+        center: true,
+        hideAddressBar: true,
+        transition: 'slide',
+        dependencies: [
+            {
+                src: '../plugin/highlight/highlight.js',
+                async: true,
+                condition: function () {
+                    return Boolean(document.querySelector('pre code'));
+                },
+                callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            }
+        ]
+    });
+</script>
+</body>
+</html>
